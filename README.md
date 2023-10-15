@@ -1,0 +1,2 @@
+# gymmanager
+Gym Manager is an app for users having a hard time to remember their gym routines and statistics. It is a very intuitive and lightweight app that allows you to save routines, see, track and share them, and to visualize your statistics and records from the last routine so that you know which intensity level you are able to reach.
