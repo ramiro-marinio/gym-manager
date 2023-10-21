@@ -22,6 +22,9 @@ class DbProvider extends ChangeNotifier {
           }
         }
       },
+      // onOpen: (db) {
+      //   deleteDatabase(dbpath);
+      // },
     );
   }
 
@@ -54,9 +57,22 @@ class DbProvider extends ChangeNotifier {
 
   Future<void> createExercise(Exercise exercise) async {
     Database db = await database;
-    db.insert('ExerciseTypes', exercise.toJson());
+    db.insert(
+      'ExerciseTypes',
+      exercise.toJson(),
+    );
     init();
     notifyListeners();
+  }
+
+  Future<void> modifyExercise(Exercise exercise) async {
+    Database db = await database;
+    db.update(
+      'ExerciseTypes',
+      exercise.toJson(),
+      where: 'Id=${exercise.id}',
+    );
+    init();
   }
 
   Future<void> deleteExercise(int id) async {

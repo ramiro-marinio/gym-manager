@@ -5,7 +5,11 @@ import 'package:gymmanager/db/dbprovider.dart';
 import 'package:provider/provider.dart';
 
 class CreateExercise extends StatefulWidget {
-  const CreateExercise({super.key});
+  final Exercise? exercise;
+  const CreateExercise({
+    super.key,
+    this.exercise,
+  });
 
   @override
   State<CreateExercise> createState() => _CreateExerciseState();
@@ -14,11 +18,15 @@ class CreateExercise extends StatefulWidget {
 class _CreateExerciseState extends State<CreateExercise> {
   final _formKey = GlobalKey<FormState>();
   final titleStyle = const TextStyle(fontWeight: FontWeight.w900, fontSize: 30);
-  TextEditingController namecontroller = TextEditingController();
-  TextEditingController descriptioncontroller = TextEditingController();
-  bool val = true;
+  bool? val;
   @override
   Widget build(BuildContext context) {
+    TextEditingController namecontroller =
+        TextEditingController(text: widget.exercise?.name);
+    TextEditingController descriptioncontroller =
+        TextEditingController(text: widget.exercise?.description);
+    val ??= widget.exercise != null ? widget.exercise!.repunit : true;
+    int? exerciseid = widget.exercise?.id;
     return Scaffold(
       appBar: AppBar(title: const Text("Create an Exercise")),
       body: SingleChildScrollView(
@@ -69,10 +77,11 @@ class _CreateExerciseState extends State<CreateExercise> {
                           child: Transform.scale(
                             scale: 1.3,
                             child: Switch(
-                              value: val,
+                              value: val!,
                               onChanged: (value) {
                                 setState(() {
-                                  val = !val;
+                                  val = !val!;
+                                  print(val);
                                 });
                               },
                             ),
@@ -81,7 +90,7 @@ class _CreateExerciseState extends State<CreateExercise> {
                         const Icon(Icons.fitness_center),
                         Expanded(
                           child: AutoSizeText(
-                            "The exercise will be measured in ${val ? 'reps' : 'time'}",
+                            "The exercise will be measured in ${val! ? 'reps' : 'time'}",
                             style: const TextStyle(fontSize: 20),
                             maxLines: 1,
                           ),
@@ -92,13 +101,24 @@ class _CreateExerciseState extends State<CreateExercise> {
                   ElevatedButton.icon(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        context.read<DbProvider>().createExercise(
-                              Exercise(
-                                name: namecontroller.text,
-                                description: descriptioncontroller.text,
-                                repunit: val,
-                              ),
-                            );
+                        if (exerciseid == null) {
+                          context.read<DbProvider>().createExercise(
+                                Exercise(
+                                  name: namecontroller.text,
+                                  description: descriptioncontroller.text,
+                                  repunit: val!,
+                                ),
+                              );
+                        } else {
+                          context.read<DbProvider>().modifyExercise(
+                                Exercise(
+                                  id: widget.exercise!.id,
+                                  name: namecontroller.text,
+                                  description: descriptioncontroller.text,
+                                  repunit: val!,
+                                ),
+                              );
+                        }
                         Navigator.pop(context);
                       }
                     },

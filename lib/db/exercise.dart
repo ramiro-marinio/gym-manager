@@ -11,12 +11,18 @@ class Exercise {
   });
 
   Map<String, dynamic> toJson() {
-    return {
-      'Id': id,
-      'Name': name,
-      'Description': description,
-      'RepUnit': repunit ? 1 : 0,
-    };
+    return id != null
+        ? {
+            'Id': id,
+            'Name': name,
+            'Description': description,
+            'RepUnit': repunit ? 1 : 0,
+          }
+        : {
+            'Name': name,
+            'Description': description,
+            'RepUnit': repunit ? 1 : 0,
+          };
   }
 
   Exercise fromJson(Map<String, dynamic> map) => Exercise(

@@ -1,48 +1,43 @@
 CREATE TABLE ExerciseContainers (
-    Id INT AUTO_INCREMENT,
+    Id INTEGER PRIMARY KEY,
     Name VARCHAR(200) NOT NULL,
     Description VARCHAR(5000),
     CreationDate DATE,
     IsRoutine BOOLEAN DEFAULT 1,
-    Parent INT,
-    Sets INT,
-    PRIMARY KEY (Id),
+    Parent INTEGER,
+    Sets INTEGER,
     FOREIGN KEY (Parent) REFERENCES ExerciseContainers(Id) ON DELETE CASCADE
 );
 CREATE TABLE ExerciseTypes (
-    Id INT AUTO_INCREMENT,
+    Id INTEGER PRIMARY KEY,
     Name VARCHAR(200) NOT NULL,
     Description VARCHAR(2000),
-    RepUnit BOOLEAN DEFAULT 1,
-    PRIMARY KEY (Id)
+    RepUnit BOOLEAN DEFAULT 1
 );
 CREATE TABLE Exercises (
-    Id INT AUTO_INCREMENT,
-    ExerciseType INT NOT NULL,
-    Amount INT NOT NULL,
-    Sets INT NOT NULL,
-    RoutineOrder INT NOT NULL,
+    Id INTEGER PRIMARY KEY,
+    ExerciseType INTEGER NOT NULL,
+    Amount INTEGER NOT NULL,
+    Sets INTEGER NOT NULL,
+    RoutineOrder INTEGER NOT NULL,
     Dropset BOOLEAN DEFAULT 0,
     Supersetted BOOLEAN DEFAULT 0,
-    Parent INT NOT NULL,
-    PRIMARY KEY (Id),
+    Parent INTEGER NOT NULL,
     FOREIGN KEY (ExerciseType) REFERENCES ExerciseTypes(Id) ON DELETE CASCADE,
     FOREIGN KEY (Parent) REFERENCES ExerciseContainers(Id) ON DELETE CASCADE
 );
 CREATE TABLE RoutineRecords (
-    Id INT AUTO_INCREMENT,
+    Id INTEGER PRIMARY KEY,
     Moment DATETIME NOT NULL,
-    RoutineId INT NOT NULL,
-    PRIMARY KEY (Id),
+    RoutineId INTEGER,
     FOREIGN KEY (RoutineId) REFERENCES ExerciseContainers(Id)
 );
 CREATE TABLE ExerciseRecords(
-    Id INT AUTO_INCREMENT,
-    ExerciseType INT NOT NULL,
-    RecordId INT NOT NULL,
-    Amount INT NOT NULL,
-    Sets INT NOT NULL,
-    PRIMARY KEY (Id),
+    Id INTEGER PRIMARY KEY,
+    ExerciseType INTEGER NOT NULL,
+    RecordId INTEGER
+    Amount INTEGER NOT NULL,
+    Sets INTEGER NOT NULL,
     FOREIGN KEY (ExerciseType) REFERENCES ExerciseTypes(Id) ON DELETE CASCADE,
     FOREIGN KEY (RecordId) REFERENCES RoutineRecords(Id) ON DELETE CASCADE
 );

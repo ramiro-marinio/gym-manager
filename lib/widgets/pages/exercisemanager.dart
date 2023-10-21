@@ -17,6 +17,7 @@ class _ExerciseManagerState extends State<ExerciseManager> {
   Widget build(BuildContext context) {
     List<Exercise> exercises = context.watch<DbProvider>().exercises;
     double width = MediaQuery.of(context).size.width;
+    final dbprovider = context.read<DbProvider>();
     return Scaffold(
         appBar: AppBar(title: const Text("My Exercises")),
         floatingActionButton: FloatingActionButton(
@@ -79,6 +80,95 @@ class _ExerciseManagerState extends State<ExerciseManager> {
                                     ? Icons.fitness_center
                                     : Icons.timer,
                                 size: 50,
+                              ),
+                            ),
+                            Positioned(
+                              top: 50,
+                              child: Row(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title:
+                                                const Text("Delete Exercise?"),
+                                            content: const Text(
+                                                "This exercise will disappear in all routines!"),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text("No"),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  dbprovider.deleteExercise(
+                                                    exercise.id!,
+                                                  );
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text("Yes"),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                    icon: const Icon(Icons.delete),
+                                    splashRadius: 25,
+                                    splashColor:
+                                        const Color.fromARGB(50, 255, 0, 0),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => CreateExercise(
+                                            exercise: exercise,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    icon: const Icon(Icons.edit),
+                                    splashRadius: 25,
+                                    splashColor:
+                                        const Color.fromARGB(50, 0, 0, 255),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text(exercise.name),
+                                            content: SingleChildScrollView(
+                                              child: ListBody(
+                                                children: [
+                                                  const Text(
+                                                    "Description:",
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w900,
+                                                    ),
+                                                  ),
+                                                  Text(exercise.description),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    icon: const Icon(Icons.info),
+                                    splashRadius: 25,
+                                    splashColor:
+                                        const Color.fromARGB(50, 0, 255, 0),
+                                  )
+                                ],
                               ),
                             ),
                           ],
