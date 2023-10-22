@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/widgets/navdrawer.dart';
+import 'package:gymmanager/widgets/pages/forms/create_routine.dart';
 
 class Routines extends StatefulWidget {
   const Routines({super.key});
@@ -15,7 +16,12 @@ class _RoutinesState extends State<Routines> {
       appBar: AppBar(title: const Text("My Routines")),
       drawer: const NavDrawer(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const CreateRoutine()),
+          );
+        },
         child: const Icon(Icons.add),
       ),
       body: const Column(

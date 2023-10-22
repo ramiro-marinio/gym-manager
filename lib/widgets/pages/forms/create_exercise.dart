@@ -1,15 +1,13 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:gymmanager/db/Exercise.dart';
+import 'package:gymmanager/db/resources/exercisetype.dart';
 import 'package:gymmanager/db/dbprovider.dart';
 import 'package:provider/provider.dart';
 
 class CreateExercise extends StatefulWidget {
-  final Exercise? exercise;
-  const CreateExercise({
-    super.key,
-    this.exercise,
-  });
+  final ExerciseType? exercise;
+  final bool modifyMode;
+  const CreateExercise({super.key, this.exercise, required this.modifyMode});
 
   @override
   State<CreateExercise> createState() => _CreateExerciseState();
@@ -18,17 +16,20 @@ class CreateExercise extends StatefulWidget {
 class _CreateExerciseState extends State<CreateExercise> {
   final _formKey = GlobalKey<FormState>();
   final titleStyle = const TextStyle(fontWeight: FontWeight.w900, fontSize: 30);
+  TextEditingController? namecontroller;
+  TextEditingController? descriptioncontroller;
   bool? val;
   @override
   Widget build(BuildContext context) {
-    TextEditingController namecontroller =
-        TextEditingController(text: widget.exercise?.name);
-    TextEditingController descriptioncontroller =
+    namecontroller ??= TextEditingController(text: widget.exercise?.name);
+    descriptioncontroller ??=
         TextEditingController(text: widget.exercise?.description);
     val ??= widget.exercise != null ? widget.exercise!.repunit : true;
-    int? exerciseid = widget.exercise?.id;
     return Scaffold(
-      appBar: AppBar(title: const Text("Create an Exercise")),
+      appBar: AppBar(
+          title: Text(!widget.modifyMode
+              ? "Create an Exercise"
+              : "Modify ${widget.exercise!.name}")),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -81,7 +82,6 @@ class _CreateExerciseState extends State<CreateExercise> {
                               onChanged: (value) {
                                 setState(() {
                                   val = !val!;
-                                  print(val);
                                 });
                               },
                             ),
@@ -101,20 +101,20 @@ class _CreateExerciseState extends State<CreateExercise> {
                   ElevatedButton.icon(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        if (exerciseid == null) {
+                        if (!widget.modifyMode) {
                           context.read<DbProvider>().createExercise(
-                                Exercise(
-                                  name: namecontroller.text,
-                                  description: descriptioncontroller.text,
+                                ExerciseType(
+                                  name: namecontroller!.text,
+                                  description: descriptioncontroller!.text,
                                   repunit: val!,
                                 ),
                               );
                         } else {
                           context.read<DbProvider>().modifyExercise(
-                                Exercise(
+                                ExerciseType(
                                   id: widget.exercise!.id,
-                                  name: namecontroller.text,
-                                  description: descriptioncontroller.text,
+                                  name: namecontroller!.text,
+                                  description: descriptioncontroller!.text,
                                   repunit: val!,
                                 ),
                               );
@@ -122,8 +122,12 @@ class _CreateExerciseState extends State<CreateExercise> {
                         Navigator.pop(context);
                       }
                     },
-                    icon: const Icon(Icons.add),
-                    label: const Text("CREATE EXERCISE"),
+                    icon: Icon(!widget.modifyMode ? Icons.add : Icons.edit),
+                    label: Text(
+                      widget.exercise == null
+                          ? "CREATE EXERCISE"
+                          : "MODIFY EXERCISE",
+                    ),
                   )
                 ],
               ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gymmanager/db/Exercise.dart';
+import 'package:gymmanager/db/resources/exercisetype.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -29,14 +29,15 @@ class DbProvider extends ChangeNotifier {
   }
 
   //EXERCISES SECTION
-  List<Exercise>? _exercises;
+  List<ExerciseType>? _exercises;
   Future<void> init() async {
     Database db = await database;
-    List<Map<String, dynamic>> data = await db.query('ExerciseTypes');
+    List<Map<String, dynamic>> data =
+        await db.query('ExerciseTypes', orderBy: "Name ASC");
     _exercises = [];
     for (Map exercise in data) {
       _exercises!.add(
-        Exercise(
+        ExerciseType(
           id: exercise['Id'],
           name: exercise['Name'],
           description: exercise['Description'],
@@ -47,7 +48,7 @@ class DbProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<Exercise> get exercises {
+  List<ExerciseType> get exercises {
     if (_exercises == null) {
       init();
       return [];
@@ -55,7 +56,7 @@ class DbProvider extends ChangeNotifier {
     return _exercises!;
   }
 
-  Future<void> createExercise(Exercise exercise) async {
+  Future<void> createExercise(ExerciseType exercise) async {
     Database db = await database;
     db.insert(
       'ExerciseTypes',
@@ -65,7 +66,7 @@ class DbProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> modifyExercise(Exercise exercise) async {
+  Future<void> modifyExercise(ExerciseType exercise) async {
     Database db = await database;
     db.update(
       'ExerciseTypes',
@@ -86,4 +87,5 @@ class DbProvider extends ChangeNotifier {
       }
     }
   }
+  //END OF EXERCISES SECTION
 }

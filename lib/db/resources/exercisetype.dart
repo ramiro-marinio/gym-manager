@@ -1,9 +1,9 @@
-class Exercise {
+class ExerciseType {
   int? id;
   final String name;
   final String description;
   final bool repunit;
-  Exercise({
+  ExerciseType({
     this.id,
     required this.name,
     required this.description,
@@ -25,7 +25,7 @@ class Exercise {
           };
   }
 
-  Exercise fromJson(Map<String, dynamic> map) => Exercise(
+  ExerciseType fromJson(Map<String, dynamic> map) => ExerciseType(
         id: map['id'],
         name: map['Name'],
         description: map['Description'],

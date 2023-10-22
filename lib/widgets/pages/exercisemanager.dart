@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/dbprovider.dart';
-import 'package:gymmanager/db/Exercise.dart';
+import 'package:gymmanager/db/resources/exercisetype.dart';
 import 'package:gymmanager/widgets/navdrawer.dart';
 import 'package:gymmanager/widgets/pages/forms/create_exercise.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +15,7 @@ class ExerciseManager extends StatefulWidget {
 class _ExerciseManagerState extends State<ExerciseManager> {
   @override
   Widget build(BuildContext context) {
-    List<Exercise> exercises = context.watch<DbProvider>().exercises;
+    List<ExerciseType> exercises = context.watch<DbProvider>().exercises;
     double width = MediaQuery.of(context).size.width;
     final dbprovider = context.read<DbProvider>();
     return Scaffold(
@@ -25,7 +25,9 @@ class _ExerciseManagerState extends State<ExerciseManager> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const CreateExercise(),
+                builder: (context) => const CreateExercise(
+                  modifyMode: false,
+                ),
               ),
             );
           },
@@ -48,7 +50,7 @@ class _ExerciseManagerState extends State<ExerciseManager> {
               ),
               Builder(builder: (context) {
                 List<Widget> widgets = [];
-                for (Exercise exercise in exercises) {
+                for (ExerciseType exercise in exercises) {
                   widgets.add(
                     Card(
                       color: Colors.transparent,
@@ -129,6 +131,7 @@ class _ExerciseManagerState extends State<ExerciseManager> {
                                         MaterialPageRoute(
                                           builder: (context) => CreateExercise(
                                             exercise: exercise,
+                                            modifyMode: true,
                                           ),
                                         ),
                                       );
