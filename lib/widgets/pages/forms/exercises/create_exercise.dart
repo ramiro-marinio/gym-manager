@@ -7,7 +7,9 @@ import 'package:provider/provider.dart';
 class CreateExercise extends StatefulWidget {
   final ExerciseType? exercise;
   final bool modifyMode;
-  const CreateExercise({super.key, this.exercise, required this.modifyMode});
+  final VoidCallback? onFinish;
+  const CreateExercise(
+      {super.key, this.exercise, required this.modifyMode, this.onFinish});
 
   @override
   State<CreateExercise> createState() => _CreateExerciseState();
@@ -118,6 +120,9 @@ class _CreateExerciseState extends State<CreateExercise> {
                                   repunit: val!,
                                 ),
                               );
+                        }
+                        if (widget.onFinish != null) {
+                          widget.onFinish!();
                         }
                         Navigator.pop(context);
                       }
