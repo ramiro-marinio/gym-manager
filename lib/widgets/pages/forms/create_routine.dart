@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gymmanager/db/dbprovider.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
+import 'package:gymmanager/db/resources/exercisetype.dart';
 import 'package:gymmanager/widgets/blocks/routine_exercise.dart';
 import 'package:gymmanager/widgets/pages/forms/exercises/add_exercise.dart';
+import 'package:provider/provider.dart';
 
 class CreateRoutine extends StatefulWidget {
   const CreateRoutine({super.key});
@@ -14,6 +17,7 @@ class _CreateRoutineState extends State<CreateRoutine> {
   List<Exercise> routine = [];
   @override
   Widget build(BuildContext context) {
+    List<ExerciseType> exs = context.watch<DbProvider>().exercises;
     return WillPopScope(
       onWillPop: () async {
         showDialog(
@@ -71,6 +75,7 @@ class _CreateRoutineState extends State<CreateRoutine> {
                                   );
                                 });
                               },
+                              exercises: exs,
                             );
                           },
                         ),

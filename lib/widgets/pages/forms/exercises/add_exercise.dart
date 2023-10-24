@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:gymmanager/db/dbprovider.dart';
 import 'package:gymmanager/db/resources/exercisetype.dart';
 import 'package:gymmanager/widgets/pages/forms/exercises/create_exercise.dart';
-import 'package:provider/provider.dart';
 
 class AddExercise extends StatefulWidget {
   final Function(ExerciseType exerciseType) onChoose;
-  const AddExercise({super.key, required this.onChoose});
+  final List<ExerciseType> exercises;
+  const AddExercise(
+      {super.key, required this.onChoose, required this.exercises});
 
   @override
   State<AddExercise> createState() => _AddExerciseState();
@@ -18,10 +18,8 @@ class _AddExerciseState extends State<AddExercise> {
   String search = "";
   @override
   Widget build(BuildContext context) {
-    List<ExerciseType> exercises = context.watch<DbProvider>().exercises;
-    if (shown == null || exercises.isNotEmpty) {
-      shown = exercises;
-    }
+    List<ExerciseType> exercises = widget.exercises;
+    shown ??= widget.exercises;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Select an execise"),
@@ -69,6 +67,12 @@ class _AddExerciseState extends State<AddExercise> {
                   exercise.description.replaceAll(RegExp("\n"), " "),
                   overflow: TextOverflow.ellipsis,
                 ),
+              ),
+            );
+            renderedExercises.add(
+              const Divider(
+                color: Color.fromARGB(150, 0, 0, 0),
+                thickness: 1,
               ),
             );
           }
