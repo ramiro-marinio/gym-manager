@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
+import 'package:gymmanager/widgets/blocks/routine_exercise.dart';
 import 'package:gymmanager/widgets/pages/forms/exercises/add_exercise.dart';
 
 class CreateRoutine extends StatefulWidget {
@@ -111,94 +112,9 @@ class _CreateRoutineState extends State<CreateRoutine> {
                 ),
               );
             } else {
-              final double scrwidth = MediaQuery.of(context).size.width;
               List<Widget> display = [];
               for (Exercise exercise in routine) {
-                bool unit = exercise.exerciseType.repunit;
-                display.add(
-                  Card(
-                    color: Colors.transparent,
-                    child: SizedBox(
-                      width: scrwidth * 0.9,
-                      height: 100,
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: 10,
-                            left: 10,
-                            child: Text(
-                              exercise.exerciseType.name,
-                              style: const TextStyle(
-                                  fontSize: 25, fontWeight: FontWeight.w500),
-                            ),
-                          ),
-                          Positioned(
-                            top: 40,
-                            left: 10,
-                            child: Row(
-                              children: [
-                                Text(
-                                  unit ? "Reps:" : "Time:",
-                                  style: const TextStyle(fontSize: 18),
-                                ),
-                                const SizedBox(
-                                  width: 60,
-                                  height: 20,
-                                  child: TextField(
-                                    keyboardType: TextInputType.number,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    textAlignVertical: TextAlignVertical.center,
-                                    maxLines: 1,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const Positioned(
-                            top: 65,
-                            left: 10,
-                            child: Row(
-                              children: [
-                                Text(
-                                  "Sets:",
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                                SizedBox(
-                                  width: 60,
-                                  height: 20,
-                                  child: TextField(
-                                    keyboardType: TextInputType.number,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    textAlignVertical: TextAlignVertical.center,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Positioned(
-                              top: 15,
-                              right: scrwidth * 0.1,
-                              child: Column(
-                                children: [
-                                  Text(
-                                    "Dropsetted:",
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                                  Switch(
-                                    value: false,
-                                    onChanged: (value) {},
-                                  ),
-                                ],
-                              ))
-                        ],
-                      ),
-                    ),
-                  ),
-                );
+                display.add(RoutineExercise(exercise: exercise));
               }
               return Column(
                 children: [

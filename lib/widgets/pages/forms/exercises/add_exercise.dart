@@ -18,8 +18,10 @@ class _AddExerciseState extends State<AddExercise> {
   String search = "";
   @override
   Widget build(BuildContext context) {
-    List<ExerciseType> exercises =
-        shown = context.watch<DbProvider>().exercises;
+    List<ExerciseType> exercises = context.watch<DbProvider>().exercises;
+    if (shown == null || exercises.isNotEmpty) {
+      shown = exercises;
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text("Select an execise"),
@@ -106,7 +108,6 @@ class _AddExerciseState extends State<AddExercise> {
                             ),
                             onFinish: () {
                               setState(() {
-                                print("Clearing");
                                 controller.clear();
                                 search = "";
                                 shown = exercises;
