@@ -15,7 +15,7 @@ class CreateRoutine extends StatefulWidget {
 }
 
 class _CreateRoutineState extends State<CreateRoutine> {
-  List<Exercise> routine = [];
+  List<RoutineExercise> routine = [];
   @override
   Widget build(BuildContext context) {
     List<ExerciseType> exs = context.watch<DbProvider>().exercises;
@@ -66,13 +66,15 @@ class _CreateRoutineState extends State<CreateRoutine> {
                               onChoose: (exerciseType) {
                                 setState(() {
                                   routine.add(
-                                    Exercise(
+                                    RoutineExercise(
+                                        exercise: Exercise(
                                       exerciseType: exerciseType,
                                       amount: 1,
+                                      routineOrder: routine.length,
                                       sets: 1,
                                       dropset: false,
                                       supersetted: false,
-                                    ),
+                                    )),
                                   );
                                 });
                               },
@@ -118,18 +120,45 @@ class _CreateRoutineState extends State<CreateRoutine> {
                 ),
               );
             } else {
+              print(routine);
               List<Widget> display = [];
-              for (Exercise exercise in routine) {
+              for (RoutineExercise exerciseWidget in routine) {
+                Exercise exercise = exerciseWidget.exercise;
+                //THIS WILL APPEAR AS A SINGULAR EXERCISE
                 display += [
-                  RoutineExercise(exercise: exercise),
+                  Draggable<int>(
+                    feedback: exerciseWidget,
+                    data: exercise.routineOrder,
+                    child: exerciseWidget,
+                  ),
                   DragTarget(
                     builder: (context, candidateData, rejectedData) {
-                      return const Divider(
-                        color: Colors.red,
-                        thickness: 4,
+                      return Container(
+                        color: Colors.green,
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          child: Divider(
+                            color: candidateData.isEmpty
+                                ? Colors.red
+                                : Colors.blue,
+                            thickness: 4,
+                          ),
+                        ),
                       );
                     },
-                    onAccept: (data) {},
+                    onAccept: (int exerciseIndex) {
+                      setState(() {
+                        routine = moveElement(
+                          routine,
+                          exerciseIndex,
+                          exercise.routineOrder!,
+                        );
+                        for (var i = 0; i < routine.length; i++) {
+                          routine[i].exercise.routineOrder = i;
+                        }
+                      });
+                    },
                   )
                 ];
               }

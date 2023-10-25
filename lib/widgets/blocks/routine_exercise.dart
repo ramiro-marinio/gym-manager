@@ -5,10 +5,15 @@ import 'package:gymmanager/widgets/blocks/time_setter.dart';
 
 class RoutineExercise extends StatefulWidget {
   final Exercise exercise;
-  const RoutineExercise({super.key, required this.exercise});
-
+  RoutineExercise({super.key, required this.exercise});
   @override
   State<RoutineExercise> createState() => _RoutineExerciseState();
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    String result = exercise.dropset.toString();
+    return result;
+  }
 }
 
 class _RoutineExerciseState extends State<RoutineExercise> {
@@ -140,10 +145,12 @@ class _RoutineExerciseState extends State<RoutineExercise> {
               right: scrwidth * 0.15,
               top: 45,
               child: Switch(
-                value: dropset,
+                value: widget.exercise.dropset,
                 onChanged: (value) {
                   setState(() {
-                    dropset = !dropset;
+                    print("Before:$dropset");
+                    widget.exercise.dropset = !widget.exercise.dropset;
+                    print("After:$dropset");
                   });
                 },
               ),
@@ -152,16 +159,6 @@ class _RoutineExerciseState extends State<RoutineExercise> {
         ),
       ),
     );
-    return Draggable(
-      childWhenDragging: Card(
-        color: const Color.fromARGB(100, 0, 0, 0),
-        child: SizedBox(
-          width: scrwidth * 0.9,
-          height: 100,
-        ),
-      ),
-      feedback: excse,
-      child: excse,
-    );
+    return excse;
   }
 }

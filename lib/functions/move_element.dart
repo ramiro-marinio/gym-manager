@@ -1,10 +1,13 @@
-List moveElement(List list, int index, int newposition,
+import 'package:gymmanager/widgets/blocks/routine_exercise.dart';
+
+List<RoutineExercise> moveElement(
+    List<RoutineExercise> list, int index, int newposition,
     {bool moveToBeggining = false}) {
   if (index == newposition) {
     return list;
   }
   bool forward = newposition > index;
-  List listA = [];
+  List<RoutineExercise> listA = [];
   //This for loop adds every item that is not the "index" item, effectively removing it
   for (var i = 0; i < list.length; i++) {
     if (list[i] != list[index]) {
@@ -12,8 +15,8 @@ List moveElement(List list, int index, int newposition,
     }
   }
 
-  List halfA = [];
-  List halfB = [];
+  List<RoutineExercise> halfA = [];
+  List<RoutineExercise> halfB = [];
   if (moveToBeggining == true) {
     return [list[index]] + listA;
   }
