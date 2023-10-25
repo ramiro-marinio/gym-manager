@@ -19,7 +19,7 @@ class _AddExerciseState extends State<AddExercise> {
   String search = "";
   @override
   Widget build(BuildContext context) {
-    List<ExerciseType> exercises = [];
+    List<ExerciseType> exercises = widget.exercises;
     shown ??= widget.exercises;
     if (exercises.isNotEmpty) {
       return Scaffold(
