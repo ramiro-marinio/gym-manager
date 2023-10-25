@@ -119,7 +119,18 @@ class _CreateRoutineState extends State<CreateRoutine> {
             } else {
               List<Widget> display = [];
               for (Exercise exercise in routine) {
-                display.add(RoutineExercise(exercise: exercise));
+                display += [
+                  RoutineExercise(exercise: exercise),
+                  DragTarget(
+                    builder: (context, candidateData, rejectedData) {
+                      return const Divider(
+                        color: Colors.red,
+                        thickness: 4,
+                      );
+                    },
+                    onAccept: (data) {},
+                  )
+                ];
               }
               return Column(
                 children: [

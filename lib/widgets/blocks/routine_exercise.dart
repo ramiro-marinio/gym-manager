@@ -25,7 +25,7 @@ class _RoutineExerciseState extends State<RoutineExercise> {
     final double scrwidth = MediaQuery.of(context).size.width;
     Exercise exercise = widget.exercise;
     bool unit = exercise.exerciseType.repunit;
-    return Card(
+    Widget excse = Card(
       color: Colors.transparent,
       child: SizedBox(
         width: scrwidth * 0.9,
@@ -35,10 +35,16 @@ class _RoutineExerciseState extends State<RoutineExercise> {
             Positioned(
               top: 10,
               left: 10,
-              child: Text(
-                exercise.exerciseType.name,
-                style:
-                    const TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+              child: SizedBox(
+                width: 170,
+                child: Text(
+                  exercise.exerciseType.name,
+                  style: const TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
             //Reps or time adjuster
@@ -68,23 +74,25 @@ class _RoutineExerciseState extends State<RoutineExercise> {
                         : Card(
                             color: Colors.transparent,
                             child: InkWell(
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return TimeSetter(
-                                      setTime: (int seconds) {
-                                        setState(() {
-                                          amount = seconds;
-                                        });
-                                      },
-                                    );
-                                  },
-                                );
-                              },
+                              onTap: !dropset
+                                  ? () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return TimeSetter(
+                                            setTime: (int seconds) {
+                                              setState(() {
+                                                amount = seconds;
+                                              });
+                                            },
+                                          );
+                                        },
+                                      );
+                                    }
+                                  : null,
                               child: Center(
                                 child: AutoSizeText(
-                                  displayTime(amount),
+                                  !dropset ? displayTime(amount) : "-",
                                 ),
                               ),
                             ),
@@ -122,37 +130,9 @@ class _RoutineExerciseState extends State<RoutineExercise> {
             Positioned(
               top: 15,
               right: scrwidth * 0.1,
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text("Drop Sets"),
-                            content: const Text(
-                                "When an exercise is \"drop-setted\", it means that instead of attempting to do a fixed amount of reps or time, one will repeat the exercise until muscle failure."),
-                            actions: [
-                              TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: const Text("OK"))
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.info,
-                    ),
-                    splashColor: Colors.blue,
-                    splashRadius: 25,
-                  ),
-                  const Text(
-                    "Dropsetted:",
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ],
+              child: const Text(
+                "Dropsetted:",
+                style: TextStyle(fontSize: 20),
               ),
             ),
             //Dropset Switch
@@ -171,6 +151,17 @@ class _RoutineExerciseState extends State<RoutineExercise> {
           ],
         ),
       ),
+    );
+    return Draggable(
+      childWhenDragging: Card(
+        color: const Color.fromARGB(100, 0, 0, 0),
+        child: SizedBox(
+          width: scrwidth * 0.9,
+          height: 100,
+        ),
+      ),
+      feedback: excse,
+      child: excse,
     );
   }
 }
