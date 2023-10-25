@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymmanager/db/dbprovider.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercisetype.dart';
+import 'package:gymmanager/functions/move_element.dart';
 import 'package:gymmanager/widgets/blocks/routine_exercise.dart';
 import 'package:gymmanager/widgets/pages/forms/exercises/add_exercise.dart';
 import 'package:provider/provider.dart';
