@@ -5,7 +5,7 @@ import 'package:gymmanager/widgets/blocks/time_setter.dart';
 
 class RoutineExercise extends StatefulWidget {
   final Exercise exercise;
-  RoutineExercise({super.key, required this.exercise});
+  const RoutineExercise({super.key, required this.exercise});
   @override
   State<RoutineExercise> createState() => _RoutineExerciseState();
 
@@ -43,7 +43,7 @@ class _RoutineExerciseState extends State<RoutineExercise> {
               child: SizedBox(
                 width: 170,
                 child: Text(
-                  exercise.exerciseType.name,
+                  exercise.exerciseType.name + exercise.routineOrder.toString(),
                   style: const TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.w500,
@@ -148,9 +148,7 @@ class _RoutineExerciseState extends State<RoutineExercise> {
                 value: widget.exercise.dropset,
                 onChanged: (value) {
                   setState(() {
-                    print("Before:$dropset");
                     widget.exercise.dropset = !widget.exercise.dropset;
-                    print("After:$dropset");
                   });
                 },
               ),

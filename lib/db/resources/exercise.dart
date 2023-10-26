@@ -5,7 +5,7 @@ class Exercise {
   final ExerciseType exerciseType;
   int amount;
   int sets;
-  int? routineOrder;
+  int routineOrder;
   bool dropset;
   bool supersetted;
   final int? parent;
@@ -14,7 +14,7 @@ class Exercise {
     required this.exerciseType,
     required this.amount,
     required this.sets,
-    this.routineOrder,
+    required this.routineOrder,
     required this.dropset,
     required this.supersetted,
     this.parent,

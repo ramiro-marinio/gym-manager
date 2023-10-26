@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gymmanager/db/dbprovider.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercisetype.dart';
-import 'package:gymmanager/functions/move_element.dart';
 import 'package:gymmanager/widgets/blocks/routine_exercise.dart';
 import 'package:gymmanager/widgets/pages/forms/exercises/add_exercise.dart';
 import 'package:provider/provider.dart';
@@ -64,19 +63,26 @@ class _CreateRoutineState extends State<CreateRoutine> {
                           builder: (context) {
                             return AddExercise(
                               onChoose: (exerciseType) {
-                                setState(() {
-                                  routine.add(
-                                    RoutineExercise(
-                                        exercise: Exercise(
-                                      exerciseType: exerciseType,
-                                      amount: 1,
-                                      routineOrder: routine.length,
-                                      sets: 1,
-                                      dropset: false,
-                                      supersetted: false,
-                                    )),
-                                  );
-                                });
+                                setState(
+                                  () {
+                                    routine.add(
+                                      RoutineExercise(
+                                          exercise: Exercise(
+                                        exerciseType: exerciseType,
+                                        amount: 1,
+                                        routineOrder: routine.length,
+                                        sets: 1,
+                                        dropset: false,
+                                        supersetted: false,
+                                      )),
+                                    );
+                                    print("////////////////");
+                                    for (RoutineExercise e in routine) {
+                                      print(e.exercise.routineOrder);
+                                    }
+                                    print("////////////////");
+                                  },
+                                );
                               },
                               exercises: exs,
                             );
@@ -120,15 +126,15 @@ class _CreateRoutineState extends State<CreateRoutine> {
                 ),
               );
             } else {
-              print(routine);
               List<Widget> display = [];
-              for (RoutineExercise exerciseWidget in routine) {
+              for (var i = 0; i < routine.length; i++) {
+                RoutineExercise exerciseWidget = routine[i];
                 Exercise exercise = exerciseWidget.exercise;
                 //THIS WILL APPEAR AS A SINGULAR EXERCISE
                 display += [
                   Draggable<int>(
                     feedback: exerciseWidget,
-                    data: exercise.routineOrder,
+                    data: i,
                     child: exerciseWidget,
                   ),
                   DragTarget(
@@ -147,17 +153,35 @@ class _CreateRoutineState extends State<CreateRoutine> {
                         ),
                       );
                     },
-                    onAccept: (int exerciseIndex) {
-                      setState(() {
-                        routine = moveElement(
-                          routine,
-                          exerciseIndex,
-                          exercise.routineOrder!,
-                        );
-                        for (var i = 0; i < routine.length; i++) {
-                          routine[i].exercise.routineOrder = i;
-                        }
-                      });
+                    onAccept: (int index) {
+                      int y = exerciseWidget.exercise.routineOrder;
+                      int x = routine[index].exercise.routineOrder;
+                      setState(
+                        () {
+                          for (var j = 0; j < routine.length; j++) {
+                            RoutineExercise ex = routine[j];
+                            if (x > y + 1) {
+                              if (ex.exercise.routineOrder > y &&
+                                  ex.exercise.routineOrder < x) {
+                                routine[j].exercise.routineOrder += 1;
+                              }
+                            } else {
+                              if (ex.exercise.routineOrder > y &&
+                                  ex.exercise.routineOrder < x) {
+                                routine[j].exercise.routineOrder -= 1;
+                              }
+                              if (ex.exercise.routineOrder == y) {
+                                routine[j].exercise.routineOrder -= 1;
+                              }
+                            }
+                          }
+                          print("////////////////");
+                          for (RoutineExercise e in routine) {
+                            print(e.exercise.routineOrder);
+                          }
+                          print("////////////////");
+                        },
+                      );
                     },
                   )
                 ];
