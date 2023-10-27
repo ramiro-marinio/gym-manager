@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
@@ -25,12 +27,15 @@ class _RoutineExerciseState extends State<RoutineExercise> {
     return seconds >= 10 ? '$minutes:$seconds' : '$minutes:0$seconds';
   }
 
+  int ran = Random().nextInt(20);
+
   @override
   Widget build(BuildContext context) {
+    TextEditingController controller = TextEditingController(text: "$ran");
     final double scrwidth = MediaQuery.of(context).size.width;
     Exercise exercise = widget.exercise;
     bool unit = exercise.exerciseType.repunit;
-    Widget excse = Card(
+    return Card(
       color: Colors.transparent,
       child: SizedBox(
         width: scrwidth * 0.9,
@@ -42,11 +47,12 @@ class _RoutineExerciseState extends State<RoutineExercise> {
               left: 10,
               child: SizedBox(
                 width: 170,
-                child: Text(
-                  exercise.exerciseType.name + exercise.routineOrder.toString(),
+                child: AutoSizeText(
+                  exercise.exerciseType.name,
                   style: const TextStyle(
-                    fontSize: 25,
+                    fontSize: 20,
                     fontWeight: FontWeight.w500,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
@@ -66,6 +72,7 @@ class _RoutineExerciseState extends State<RoutineExercise> {
                     height: unit ? 20 : 25,
                     child: unit
                         ? TextField(
+                            controller: controller,
                             enabled: !dropset,
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
@@ -156,6 +163,5 @@ class _RoutineExerciseState extends State<RoutineExercise> {
         ),
       ),
     );
-    return excse;
   }
 }

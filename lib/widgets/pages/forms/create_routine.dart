@@ -4,6 +4,7 @@ import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercisetype.dart';
 import 'package:gymmanager/widgets/blocks/routine_exercise.dart';
 import 'package:gymmanager/widgets/pages/forms/exercises/add_exercise.dart';
+import 'package:gymmanager/widgets/pages/forms/exercises/no_exercises.dart';
 import 'package:provider/provider.dart';
 
 class CreateRoutine extends StatefulWidget {
@@ -67,20 +68,16 @@ class _CreateRoutineState extends State<CreateRoutine> {
                                   () {
                                     routine.add(
                                       RoutineExercise(
+                                          key: Key('${routine.length}'),
                                           exercise: Exercise(
-                                        exerciseType: exerciseType,
-                                        amount: 1,
-                                        routineOrder: routine.length,
-                                        sets: 1,
-                                        dropset: false,
-                                        supersetted: false,
-                                      )),
+                                            exerciseType: exerciseType,
+                                            amount: 1,
+                                            routineOrder: routine.length,
+                                            sets: 1,
+                                            dropset: false,
+                                            supersetted: false,
+                                          )),
                                     );
-                                    print("////////////////");
-                                    for (RoutineExercise e in routine) {
-                                      print(e.exercise.routineOrder);
-                                    }
-                                    print("////////////////");
                                   },
                                 );
                               },
@@ -102,101 +99,36 @@ class _CreateRoutineState extends State<CreateRoutine> {
         body: Builder(
           builder: (context) {
             if (routine.isEmpty) {
-              return const Center(
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "No Exercises!",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w900, fontSize: 18),
-                        textAlign: TextAlign.center,
-                      ),
-                      Text(
-                        "Try adding some in the top-right button.",
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
+              return const NoExercises();
             } else {
-              List<Widget> display = [];
-              for (var i = 0; i < routine.length; i++) {
-                RoutineExercise exerciseWidget = routine[i];
-                //THIS WILL APPEAR AS A SINGULAR EXERCISE
-                display += [
-                  LongPressDraggable<int>(
-                    feedback: exerciseWidget,
-                    data: i,
-                    child: exerciseWidget,
-                  ),
-                  DragTarget(
-                    builder: (context, candidateData, rejectedData) {
-                      return Container(
-                        color: Colors.green,
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          child: Divider(
-                            color: candidateData.isEmpty
-                                ? Colors.red
-                                : Colors.blue,
-                            thickness: 4,
-                          ),
-                        ),
-                      );
-                    },
-                    onAccept: (int index) {
-                      int y = exerciseWidget.exercise.routineOrder;
-                      int x = routine[index].exercise.routineOrder;
-                      print("y is $y, x is $x");
-                      for (var j = 0; j < routine.length; j++) {
-                        RoutineExercise ex = routine[j];
-                        if (x > y + 1) {
-                          if (ex.exercise.routineOrder > y &&
-                              ex.exercise.routineOrder < x) {
-                            print(
-                                "${ex.exercise.routineOrder} is greater than $y, therefore it turns into ${routine[j].exercise.routineOrder + 1}");
-                            routine[j].exercise.routineOrder += 1;
-                          }
-                        } else if (x < y + 1) {
-                          if (ex.exercise.routineOrder > x &&
-                              ex.exercise.routineOrder < y + 1) {
-                            routine[j].exercise.routineOrder -= 1;
-                          }
-                        }
-                      }
-                      routine[index].exercise.routineOrder = y;
-                      // Why do we make it y and not y + 1? because the "real" y was reduced by 1. This is the old one which is now x.
-                      setState(() {
-                        display = [];
-                      });
-                    },
-                  )
-                ];
-              }
-              return ListView(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: Text(
-                        "Routine",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.w900),
-                      ),
+              return ReorderableListView(
+                header: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      "Routine",
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.w900),
                     ),
                   ),
-                  ...display
-                ],
+                ),
+                onReorder: (oldIndex, newIndex) {
+                  setState(
+                    () {
+                      if (oldIndex < newIndex) {
+                        newIndex -= 1;
+                      }
+                      final RoutineExercise item = routine.removeAt(oldIndex);
+                      routine.insert(newIndex, item);
+                      for (var i = 0; i < routine.length; i++) {
+                        routine[i].exercise.routineOrder = i;
+                      }
+                    },
+                  );
+                },
+                children: routine,
               );
             }
           },
