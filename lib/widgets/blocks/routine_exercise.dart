@@ -48,7 +48,6 @@ class _RoutineExerciseState extends State<RoutineExercise> {
                     fontSize: 25,
                     fontWeight: FontWeight.w500,
                   ),
-                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),

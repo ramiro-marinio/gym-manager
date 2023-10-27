@@ -129,10 +129,9 @@ class _CreateRoutineState extends State<CreateRoutine> {
               List<Widget> display = [];
               for (var i = 0; i < routine.length; i++) {
                 RoutineExercise exerciseWidget = routine[i];
-                Exercise exercise = exerciseWidget.exercise;
                 //THIS WILL APPEAR AS A SINGULAR EXERCISE
                 display += [
-                  Draggable<int>(
+                  LongPressDraggable<int>(
                     feedback: exerciseWidget,
                     data: i,
                     child: exerciseWidget,
@@ -156,37 +155,33 @@ class _CreateRoutineState extends State<CreateRoutine> {
                     onAccept: (int index) {
                       int y = exerciseWidget.exercise.routineOrder;
                       int x = routine[index].exercise.routineOrder;
-                      setState(
-                        () {
-                          for (var j = 0; j < routine.length; j++) {
-                            RoutineExercise ex = routine[j];
-                            if (x > y + 1) {
-                              if (ex.exercise.routineOrder > y &&
-                                  ex.exercise.routineOrder < x) {
-                                routine[j].exercise.routineOrder += 1;
-                              }
-                            } else {
-                              if (ex.exercise.routineOrder > y &&
-                                  ex.exercise.routineOrder < x) {
-                                routine[j].exercise.routineOrder -= 1;
-                              }
-                              if (ex.exercise.routineOrder == y) {
-                                routine[j].exercise.routineOrder -= 1;
-                              }
-                            }
+                      print("y is $y, x is $x");
+                      for (var j = 0; j < routine.length; j++) {
+                        RoutineExercise ex = routine[j];
+                        if (x > y + 1) {
+                          if (ex.exercise.routineOrder > y &&
+                              ex.exercise.routineOrder < x) {
+                            print(
+                                "${ex.exercise.routineOrder} is greater than $y, therefore it turns into ${routine[j].exercise.routineOrder + 1}");
+                            routine[j].exercise.routineOrder += 1;
                           }
-                          print("////////////////");
-                          for (RoutineExercise e in routine) {
-                            print(e.exercise.routineOrder);
+                        } else if (x < y + 1) {
+                          if (ex.exercise.routineOrder > x &&
+                              ex.exercise.routineOrder < y + 1) {
+                            routine[j].exercise.routineOrder -= 1;
                           }
-                          print("////////////////");
-                        },
-                      );
+                        }
+                      }
+                      routine[index].exercise.routineOrder = y;
+                      // Why do we make it y and not y + 1? because the "real" y was reduced by 1. This is the old one which is now x.
+                      setState(() {
+                        display = [];
+                      });
                     },
                   )
                 ];
               }
-              return Column(
+              return ListView(
                 children: [
                   const Padding(
                     padding: EdgeInsets.all(8.0),
