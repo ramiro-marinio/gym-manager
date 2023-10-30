@@ -27,10 +27,11 @@ void main() {
       child: MaterialApp.router(
         title: "Gym Manager",
         theme: ThemeData(
-            colorScheme: ColorScheme.fromSwatch(
-              primarySwatch: Colors.indigo,
-            ),
-            scaffoldBackgroundColor: Colors.blue[100]),
+          colorScheme: ColorScheme.fromSwatch(
+            primarySwatch: Colors.indigo,
+          ),
+          scaffoldBackgroundColor: Colors.blue[100],
+        ),
         darkTheme: ThemeData.dark(),
         routerConfig: gorouter,
       ),

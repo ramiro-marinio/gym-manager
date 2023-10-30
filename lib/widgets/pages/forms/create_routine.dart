@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gymmanager/db/dbprovider.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercisetype.dart';
-import 'package:gymmanager/widgets/blocks/routine_exercise.dart';
+import 'package:gymmanager/widgets/blocks/exercise_widget.dart';
+import 'package:gymmanager/widgets/blocks/superset/superset.dart';
 import 'package:gymmanager/widgets/pages/forms/exercises/add_exercise.dart';
 import 'package:gymmanager/widgets/pages/forms/exercises/no_exercises.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +16,8 @@ class CreateRoutine extends StatefulWidget {
 }
 
 class _CreateRoutineState extends State<CreateRoutine> {
-  List<RoutineExercise> routine = [];
+  //The routine will hold all exercises and supersets
+  List<Widget> routine = [];
   @override
   Widget build(BuildContext context) {
     List<ExerciseType> exs = context.watch<DbProvider>().exercises;
@@ -64,19 +66,30 @@ class _CreateRoutineState extends State<CreateRoutine> {
                           builder: (context) {
                             return AddExercise(
                               onChoose: (exerciseType) {
+                                Key key = UniqueKey();
                                 setState(
                                   () {
                                     routine.add(
-                                      RoutineExercise(
-                                          key: Key('${routine.length}'),
-                                          exercise: Exercise(
-                                            exerciseType: exerciseType,
-                                            amount: 1,
-                                            routineOrder: routine.length,
-                                            sets: 1,
-                                            dropset: false,
-                                            supersetted: false,
-                                          )),
+                                      ExerciseWidget(
+                                        key: key,
+                                        onDelete: () {
+                                          int index = 0;
+                                          for (Widget w in routine) {
+                                            if (w.key == key) {
+                                              routine.removeAt(index);
+                                              break;
+                                            }
+                                          }
+                                        },
+                                        exercise: Exercise(
+                                          exerciseType: exerciseType,
+                                          amount: 1,
+                                          routineOrder: routine.length,
+                                          sets: 1,
+                                          dropset: false,
+                                          supersetted: false,
+                                        ),
+                                      ),
                                     );
                                   },
                                 );
@@ -88,8 +101,21 @@ class _CreateRoutineState extends State<CreateRoutine> {
                       );
                     },
                   ),
-                  const PopupMenuItem(
-                    child: Text("Add a Superset"),
+                  PopupMenuItem(
+                    onTap: () {
+                      setState(
+                        () {
+                          routine += [
+                            SuperSet(
+                              key: Key(
+                                UniqueKey().toString(),
+                              ),
+                            )
+                          ];
+                        },
+                      );
+                    },
+                    child: const Text("Add a Superset"),
                   ),
                 ];
               },
@@ -120,10 +146,13 @@ class _CreateRoutineState extends State<CreateRoutine> {
                       if (oldIndex < newIndex) {
                         newIndex -= 1;
                       }
-                      final RoutineExercise item = routine.removeAt(oldIndex);
+                      final Widget item = routine.removeAt(oldIndex);
                       routine.insert(newIndex, item);
                       for (var i = 0; i < routine.length; i++) {
-                        routine[i].exercise.routineOrder = i;
+                        if (routine[i].runtimeType == ExerciseWidget) {
+                          (routine[i] as ExerciseWidget).exercise.routineOrder =
+                              i;
+                        } else {}
                       }
                     },
                   );
