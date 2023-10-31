@@ -32,7 +32,6 @@ void main() {
           ),
           scaffoldBackgroundColor: Colors.blue[100],
         ),
-        darkTheme: ThemeData.dark(),
         routerConfig: gorouter,
       ),
     ),

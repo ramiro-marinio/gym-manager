@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/dbprovider.dart';
+import 'package:gymmanager/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/db/resources/exercisetype.dart';
 import 'package:gymmanager/widgets/blocks/superset/miniexercisewidget.dart';
 import 'package:gymmanager/widgets/pages/forms/exercises/add_exercise.dart';
 import 'package:provider/provider.dart';
 
 class SuperSet extends StatefulWidget {
-  const SuperSet({super.key});
+  final VoidCallback onDelete;
+  //final List<MiniExerciseWidget>? superset;
+  final ExerciseContainer superset;
+  const SuperSet({super.key, required this.onDelete, required this.superset});
 
   @override
   State<SuperSet> createState() => _SuperSetState();
@@ -23,6 +27,9 @@ class _SuperSetState extends State<SuperSet> {
         child: const Icon(Icons.delete),
       ),
       direction: DismissDirection.endToStart,
+      onDismissed: (direction) {
+        widget.onDelete();
+      },
       key: Key(UniqueKey().toString()),
       child: Card(
         color: const Color.fromARGB(255, 150, 150, 255),
@@ -45,45 +52,42 @@ class _SuperSetState extends State<SuperSet> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddExercise(
-                                onChoose: (exerciseType) {
-                                  setState(() {
-                                    Key key = UniqueKey();
-                                    _superset.add(
-                                      MiniExerciseWidget(
-                                        exerciseType: exerciseType,
-                                        key: key,
-                                        onDelete: () {
-                                          setState(() {
-                                            int index = 0;
-                                            for (MiniExerciseWidget exercise
-                                                in _superset) {
-                                              if (exercise.key == key) {
-                                                _superset.removeAt(index);
-                                                break;
-                                              }
-                                              index++;
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddExercise(
+                              onChoose: (exerciseType) {
+                                setState(() {
+                                  Key key = UniqueKey();
+                                  _superset.add(
+                                    MiniExerciseWidget(
+                                      exerciseType: exerciseType,
+                                      key: key,
+                                      onDelete: () {
+                                        setState(() {
+                                          int index = 0;
+                                          for (MiniExerciseWidget exercise
+                                              in _superset) {
+                                            if (exercise.key == key) {
+                                              _superset.removeAt(index);
+                                              break;
                                             }
-                                          });
-                                        },
-                                      ),
-                                    );
-                                  });
-                                },
-                                exercises: exerciseList),
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.add),
-                      splashRadius: 25,
-                    ),
+                                            index++;
+                                          }
+                                        });
+                                      },
+                                    ),
+                                  );
+                                });
+                              },
+                              exercises: exerciseList),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.add),
+                    splashRadius: 25,
                   ),
                 ],
               ),

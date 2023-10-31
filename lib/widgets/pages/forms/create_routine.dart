@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/dbprovider.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
+import 'package:gymmanager/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/db/resources/exercisetype.dart';
 import 'package:gymmanager/widgets/blocks/exercise_widget.dart';
 import 'package:gymmanager/widgets/blocks/superset/superset.dart';
@@ -73,10 +74,13 @@ class _CreateRoutineState extends State<CreateRoutine> {
                                       ExerciseWidget(
                                         key: key,
                                         onDelete: () {
-                                          int index = 0;
-                                          for (Widget w in routine) {
-                                            if (w.key == key) {
-                                              routine.removeAt(index);
+                                          for (var i = 0;
+                                              i < routine.length;
+                                              i++) {
+                                            if (routine[i].key == key) {
+                                              setState(() {
+                                                routine.removeAt(i);
+                                              });
                                               break;
                                             }
                                           }
@@ -103,13 +107,23 @@ class _CreateRoutineState extends State<CreateRoutine> {
                   ),
                   PopupMenuItem(
                     onTap: () {
+                      Key key = UniqueKey();
                       setState(
                         () {
                           routine += [
                             SuperSet(
-                              key: Key(
-                                UniqueKey().toString(),
-                              ),
+                              key: key,
+                              onDelete: () {
+                                for (var i = 0; i < routine.length; i++) {
+                                  if (routine[i].key == key) {
+                                    setState(() {
+                                      routine.removeAt(i);
+                                    });
+                                    break;
+                                  }
+                                }
+                              },
+                              superset: ExerciseContainer(isRoutine: false),
                             )
                           ];
                         },
@@ -122,14 +136,11 @@ class _CreateRoutineState extends State<CreateRoutine> {
             )
           ],
         ),
-        body: Builder(
-          builder: (context) {
-            if (routine.isEmpty) {
-              return const NoExercises();
-            } else {
-              return ReorderableListView(
+        body: routine.isEmpty
+            ? const NoExercises()
+            : ReorderableListView(
                 header: const Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.only(top: 10, bottom: 10),
                   child: SizedBox(
                     width: double.infinity,
                     child: Text(
@@ -139,6 +150,11 @@ class _CreateRoutineState extends State<CreateRoutine> {
                           TextStyle(fontSize: 25, fontWeight: FontWeight.w900),
                     ),
                   ),
+                ),
+                footer: ElevatedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.check),
+                  label: const Text("CREATE ROUTINE"),
                 ),
                 onReorder: (oldIndex, newIndex) {
                   setState(
@@ -152,16 +168,16 @@ class _CreateRoutineState extends State<CreateRoutine> {
                         if (routine[i].runtimeType == ExerciseWidget) {
                           (routine[i] as ExerciseWidget).exercise.routineOrder =
                               i;
-                        } else {}
+                        } else {
+                          (routine[i] as SuperSet);
+                        }
                       }
                     },
                   );
                 },
-                children: routine,
-              );
-            }
-          },
-        ),
+                children:
+                    List.generate(routine.length, (index) => routine[index]),
+              ),
       ),
     );
   }

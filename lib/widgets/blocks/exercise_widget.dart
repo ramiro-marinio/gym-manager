@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
@@ -33,8 +35,9 @@ class _ExerciseWidgetState extends State<ExerciseWidget> {
     final double scrwidth = MediaQuery.of(context).size.width;
     Exercise exercise = widget.exercise;
     bool unit = exercise.exerciseType.repunit;
+    Key key = UniqueKey();
     return Dismissible(
-      key: Key(UniqueKey().toString()),
+      key: key,
       background: Container(
         color: Colors.red,
         child: const Icon(Icons.delete),
@@ -159,11 +162,12 @@ class _ExerciseWidgetState extends State<ExerciseWidget> {
                 right: scrwidth * 0.15,
                 top: 45,
                 child: Switch(
-                  value: widget.exercise.dropset,
+                  value: dropset,
                   onChanged: (value) {
                     setState(() {
-                      widget.exercise.dropset = !widget.exercise.dropset;
+                      dropset = value;
                     });
+                    print(value);
                   },
                 ),
               ),
