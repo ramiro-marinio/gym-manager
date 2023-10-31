@@ -6,6 +6,7 @@ CREATE TABLE ExerciseContainers (
     IsRoutine BOOLEAN DEFAULT 1,
     Parent INTEGER,
     Sets INTEGER,
+    RoutineOrder INTEGER,
     FOREIGN KEY (Parent) REFERENCES ExerciseContainers(Id) ON DELETE CASCADE
 );
 CREATE TABLE ExerciseTypes (

@@ -3,10 +3,12 @@ import 'package:gymmanager/db/dbprovider.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/db/resources/exercisetype.dart';
+import 'package:gymmanager/widgets/blocks/add_menu.dart';
 import 'package:gymmanager/widgets/blocks/exercise_widget.dart';
 import 'package:gymmanager/widgets/blocks/superset/superset.dart';
 import 'package:gymmanager/widgets/pages/forms/exercises/add_exercise.dart';
 import 'package:gymmanager/widgets/pages/forms/exercises/no_exercises.dart';
+import 'package:gymmanager/widgets/blocks/exitalert.dart';
 import 'package:provider/provider.dart';
 
 class CreateRoutine extends StatefulWidget {
@@ -27,26 +29,7 @@ class _CreateRoutineState extends State<CreateRoutine> {
         showDialog(
           context: context,
           builder: (context) {
-            return AlertDialog(
-              title: const Text("Leave?"),
-              content: const Text(
-                  "You are still building the routine. If you leave, it will not be saved. Proceed anyway?"),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text("No"),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Yes"),
-                ),
-              ],
-            );
+            return const ExitAlert();
           },
         );
         return true;
@@ -55,83 +38,80 @@ class _CreateRoutineState extends State<CreateRoutine> {
         appBar: AppBar(
           title: const Text("Create a routine"),
           actions: [
-            PopupMenuButton(
-              itemBuilder: (context) {
-                return [
-                  PopupMenuItem(
-                    child: const Text("Add an Exercise"),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return AddExercise(
-                              onChoose: (exerciseType) {
-                                Key key = UniqueKey();
-                                setState(
-                                  () {
-                                    routine.add(
-                                      ExerciseWidget(
-                                        key: key,
-                                        onDelete: () {
-                                          for (var i = 0;
-                                              i < routine.length;
-                                              i++) {
-                                            if (routine[i].key == key) {
-                                              setState(() {
-                                                routine.removeAt(i);
-                                              });
-                                              break;
-                                            }
-                                          }
-                                        },
-                                        exercise: Exercise(
-                                          exerciseType: exerciseType,
-                                          amount: 1,
-                                          routineOrder: routine.length,
-                                          sets: 1,
-                                          dropset: false,
-                                          supersetted: false,
-                                        ),
-                                      ),
-                                    );
+            AddMenu(
+              addExercise: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return AddExercise(
+                        onChoose: (exerciseType) {
+                          Key key = UniqueKey();
+                          int length = routine.length;
+                          setState(
+                            () {
+                              routine.add(
+                                Dismissible(
+                                  key: key,
+                                  background: Container(
+                                    color: Colors.red,
+                                    child: const Icon(Icons.delete),
+                                  ),
+                                  direction: DismissDirection.startToEnd,
+                                  onDismissed: (direction) {
+                                    for (var i = 0; i < length; i++) {}
                                   },
-                                );
-                              },
-                              exercises: exs,
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                  PopupMenuItem(
-                    onTap: () {
-                      Key key = UniqueKey();
-                      setState(
-                        () {
-                          routine += [
-                            SuperSet(
-                              key: key,
-                              onDelete: () {
-                                for (var i = 0; i < routine.length; i++) {
-                                  if (routine[i].key == key) {
-                                    setState(() {
-                                      routine.removeAt(i);
-                                    });
-                                    break;
-                                  }
-                                }
-                              },
-                              superset: ExerciseContainer(isRoutine: false),
-                            )
-                          ];
+                                  child: ExerciseWidget(
+                                    onDelete: () {},
+                                    exercise: Exercise(
+                                      exerciseType: exerciseType,
+                                      amount: 1,
+                                      routineOrder: routine.length,
+                                      sets: 1,
+                                      dropset: false,
+                                      supersetted: false,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
                         },
+                        exercises: exs,
                       );
                     },
-                    child: const Text("Add a Superset"),
                   ),
-                ];
+                );
+              },
+              addSuperset: () {
+                Key key = UniqueKey();
+                setState(
+                  () {
+                    routine.add(
+                      Dismissible(
+                        key: key,
+                        direction: DismissDirection.startToEnd,
+                        background: const Card(
+                          color: Colors.red,
+                          child: Icon(Icons.delete),
+                        ),
+                        onDismissed: (direction) {
+                          for (var i = 0; i < routine.length; i++) {
+                            if (routine[i].key == key) {
+                              setState(() {
+                                routine.removeAt(i);
+                              });
+                              break;
+                            }
+                          }
+                        },
+                        child: SuperSet(
+                          superset: ExerciseContainer(isRoutine: false),
+                        ),
+                      ),
+                    );
+                  },
+                );
               },
             )
           ],
@@ -169,14 +149,13 @@ class _CreateRoutineState extends State<CreateRoutine> {
                           (routine[i] as ExerciseWidget).exercise.routineOrder =
                               i;
                         } else {
-                          (routine[i] as SuperSet);
+                          (routine[i] as SuperSet).superset.routineOrder = i;
                         }
                       }
                     },
                   );
                 },
-                children:
-                    List.generate(routine.length, (index) => routine[index]),
+                children: routine,
               ),
       ),
     );

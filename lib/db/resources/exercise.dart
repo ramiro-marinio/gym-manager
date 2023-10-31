@@ -19,4 +19,26 @@ class Exercise {
     required this.supersetted,
     this.parent,
   });
+  Map<String, dynamic> toJson() {
+    return id != null
+        ? {
+            'Id': id,
+            'ExerciseType': exerciseType.id,
+            'Amount': amount,
+            'Sets': sets,
+            'RoutineOrder': routineOrder,
+            'Dropset': dropset,
+            'Supersetted': supersetted,
+            'Parent': parent
+          }
+        : {
+            'ExerciseType': exerciseType.id,
+            'Amount': amount,
+            'Sets': sets,
+            'RoutineOrder': routineOrder,
+            'Dropset': dropset,
+            'Supersetted': supersetted,
+            'Parent': parent
+          };
+  }
 }

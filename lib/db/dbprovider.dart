@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gymmanager/db/resources/exercise.dart';
+import 'package:gymmanager/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/db/resources/exercisetype.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -22,9 +24,6 @@ class DbProvider extends ChangeNotifier {
           }
         }
       },
-      // onOpen: (db) {
-      //   deleteDatabase(dbpath);
-      // },
     );
   }
 
@@ -87,5 +86,24 @@ class DbProvider extends ChangeNotifier {
       }
     }
   }
+
   //END OF EXERCISES SECTION
+  //ROUTINE SECTION
+  Future<int> createRoutine(ExerciseContainer routine) async {
+    Database db = await database;
+    int id = await db.insert('ExerciseContainers', routine.toJson());
+    return id;
+  }
+
+  Future<int> createSuperset(ExerciseContainer superset) async {
+    Database db = await database;
+    int id = await db.insert('ExerciseContainers', superset.toJson());
+    return id;
+  }
+
+  Future<void> createRoutineExercise(Exercise exercise) async {
+    Database db = await database;
+    await db.insert("Exercises", exercise.toJson());
+  }
+  //END OF ROUTINE SECTION
 }
