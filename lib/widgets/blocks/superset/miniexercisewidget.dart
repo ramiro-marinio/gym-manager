@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gymmanager/db/resources/exercisetype.dart';
+import 'package:gymmanager/providers/db/resources/exercisetype.dart';
 
 class MiniExerciseWidget extends StatefulWidget {
   final ExerciseType exerciseType;

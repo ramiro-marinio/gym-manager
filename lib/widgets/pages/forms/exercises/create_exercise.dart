@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:gymmanager/db/resources/exercisetype.dart';
-import 'package:gymmanager/db/dbprovider.dart';
+import 'package:gymmanager/providers/db/resources/exercisetype.dart';
+import 'package:gymmanager/providers/db/dbprovider.dart';
 import 'package:provider/provider.dart';
 
 class CreateExercise extends StatefulWidget {

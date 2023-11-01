@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gymmanager/db/dbprovider.dart';
-import 'package:gymmanager/db/resources/exercisetype.dart';
+import 'package:gymmanager/providers/db/dbprovider.dart';
+import 'package:gymmanager/providers/db/resources/exercisetype.dart';
 import 'package:gymmanager/widgets/navdrawer.dart';
 import 'package:gymmanager/widgets/pages/forms/exercises/create_exercise.dart';
 import 'package:provider/provider.dart';

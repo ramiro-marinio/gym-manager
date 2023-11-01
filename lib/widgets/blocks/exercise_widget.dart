@@ -1,13 +1,13 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:gymmanager/db/resources/exercise.dart';
+import 'package:gymmanager/providers/db/resources/exercise.dart';
 import 'package:gymmanager/widgets/blocks/time_setter.dart';
 
 class ExerciseWidget extends StatefulWidget {
   final Exercise exercise;
-  final VoidCallback onDelete;
+  final VoidCallback dropsetSwitch;
   const ExerciseWidget(
-      {super.key, required this.exercise, required this.onDelete});
+      {super.key, required this.exercise, required this.dropsetSwitch});
   @override
   State<ExerciseWidget> createState() => _ExerciseWidgetState();
 
@@ -27,7 +27,6 @@ class _ExerciseWidgetState extends State<ExerciseWidget> {
     return seconds >= 10 ? '$minutes:$seconds' : '$minutes:0$seconds';
   }
 
-  TextEditingController controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final double scrwidth = MediaQuery.of(context).size.width;
@@ -69,7 +68,7 @@ class _ExerciseWidgetState extends State<ExerciseWidget> {
                     height: unit ? 20 : 25,
                     child: unit
                         ? TextField(
-                            controller: controller,
+                            controller: exercise.amount,
                             enabled: !dropset,
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
@@ -110,12 +109,12 @@ class _ExerciseWidgetState extends State<ExerciseWidget> {
               ),
             ),
             //Sets adjuster
-            const Positioned(
+            Positioned(
               top: 65,
               left: 10,
               child: Row(
                 children: [
-                  Text(
+                  const Text(
                     "Sets:",
                     style: TextStyle(fontSize: 18),
                   ),
@@ -123,8 +122,9 @@ class _ExerciseWidgetState extends State<ExerciseWidget> {
                     width: 40,
                     height: 20,
                     child: TextField(
+                      controller: exercise.sets,
                       keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         contentPadding: EdgeInsets.symmetric(vertical: 0),
                       ),
@@ -148,10 +148,10 @@ class _ExerciseWidgetState extends State<ExerciseWidget> {
               right: scrwidth * 0.15,
               top: 45,
               child: Switch(
-                value: dropset,
+                value: exercise.dropset,
                 onChanged: (value) {
                   setState(() {
-                    dropset = !dropset;
+                    widget.dropsetSwitch();
                   });
                 },
               ),

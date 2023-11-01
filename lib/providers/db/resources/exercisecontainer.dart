@@ -1,6 +1,9 @@
 //ExerciseContainer can either be a routine or a superset. Even though it is unintuitive, it's the best way to do it if you have to use sqlite.
+import 'package:flutter/material.dart';
+
 class ExerciseContainer {
   final int? id;
+  final Key key;
   String? name;
   String? description;
   bool isRoutine;
@@ -9,15 +12,17 @@ class ExerciseContainer {
   int? routineOrder;
   int? parent;
   int? sets;
-  ExerciseContainer(
-      {required this.isRoutine,
-      this.id,
-      this.name,
-      this.description,
-      this.creationDate,
-      this.parent,
-      this.sets,
-      this.routineOrder});
+  ExerciseContainer({
+    required this.isRoutine,
+    this.id,
+    this.name,
+    this.description,
+    this.creationDate,
+    this.parent,
+    this.sets,
+    this.routineOrder,
+    required this.key,
+  });
   Map<String, dynamic> toJson() {
     return id != null
         ? {

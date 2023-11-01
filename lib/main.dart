@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gymmanager/db/dbprovider.dart';
+import 'package:gymmanager/providers/db/dbprovider.dart';
+import 'package:gymmanager/providers/routineprovider.dart';
 import 'package:gymmanager/widgets/pages/exercisemanager.dart';
 import 'package:gymmanager/widgets/pages/homescreen.dart';
 import 'package:gymmanager/widgets/pages/routines.dart';
@@ -21,19 +22,20 @@ void main() {
       builder: (context, state) => const ExerciseManager(),
     )
   ]);
-  runApp(
-    ChangeNotifierProvider(
-      create: (_) => DbProvider(),
-      child: MaterialApp.router(
-        title: "Gym Manager",
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSwatch(
-            primarySwatch: Colors.indigo,
-          ),
-          scaffoldBackgroundColor: Colors.blue[100],
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider<DbProvider>(create: (_) => DbProvider()),
+      ChangeNotifierProvider<RoutineProvider>(create: (_) => RoutineProvider()),
+    ],
+    child: MaterialApp.router(
+      title: "Gym Manager",
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.indigo,
         ),
-        routerConfig: gorouter,
+        scaffoldBackgroundColor: Colors.blue[100],
       ),
+      routerConfig: gorouter,
     ),
-  );
+  ));
 }

@@ -1,10 +1,12 @@
-import 'package:gymmanager/db/resources/exercisetype.dart';
+import 'package:flutter/material.dart';
+import 'package:gymmanager/providers/db/resources/exercisetype.dart';
 
 class Exercise {
   final int? id;
   final ExerciseType exerciseType;
-  int amount;
-  int sets;
+  final Key key;
+  TextEditingController amount;
+  TextEditingController sets;
   int routineOrder;
   bool dropset;
   bool supersetted;
@@ -17,6 +19,7 @@ class Exercise {
     required this.routineOrder,
     required this.dropset,
     required this.supersetted,
+    required this.key,
     this.parent,
   });
   Map<String, dynamic> toJson() {
