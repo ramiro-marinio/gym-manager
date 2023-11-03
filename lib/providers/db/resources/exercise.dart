@@ -9,7 +9,7 @@ class Exercise {
   int? routineOrder;
   bool dropset;
   bool supersetted;
-  final int? parent;
+  int? parent;
   Exercise({
     this.id,
     required this.exerciseType,
@@ -25,21 +25,21 @@ class Exercise {
         ? {
             'Id': id,
             'ExerciseType': exerciseType.id,
-            'Amount': amount,
-            'Sets': sets,
+            'Amount': int.parse(amount.text),
+            'Sets': int.parse(sets.text),
             'RoutineOrder': routineOrder,
-            'Dropset': dropset,
-            'Supersetted': supersetted,
-            'Parent': parent
+            'Dropset': dropset ? 1 : 0,
+            'Supersetted': supersetted ? 1 : 0,
+            'Parent': parent,
           }
         : {
             'ExerciseType': exerciseType.id,
-            'Amount': amount,
-            'Sets': sets,
+            'Amount': int.tryParse(amount.text) ?? 1,
+            'Sets': int.tryParse(sets.text) ?? 1,
             'RoutineOrder': routineOrder,
-            'Dropset': dropset,
-            'Supersetted': supersetted,
-            'Parent': parent
+            'Dropset': dropset ? 1 : 0,
+            'Supersetted': supersetted ? 1 : 0,
+            'Parent': parent,
           };
   }
 }

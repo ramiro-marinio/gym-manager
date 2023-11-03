@@ -43,6 +43,8 @@ dependencies:
   go_router: ^11.1.4
   auto_size_text: ^3.0.0
   flutter_launcher_icons: ^0.13.1
+  intl: ^0.18.1
+  gap: ^3.0.1
 
 flutter_launcher_icons:
   android: "launcher_icon"

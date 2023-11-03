@@ -64,7 +64,7 @@ class _SuperSetState extends State<SuperSet> {
                                 Key key = UniqueKey();
                                 Exercise e = Exercise(
                                     amount: TextEditingController(text: "1"),
-                                    sets: TextEditingController(),
+                                    sets: TextEditingController(text: "1"),
                                     dropset: false,
                                     exerciseType: exerciseType,
                                     supersetted: true);

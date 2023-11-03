@@ -9,7 +9,7 @@ class ExerciseContainer {
   List<ExerciseWidget>? children;
   bool isRoutine;
   //sets, parent and routineOrder will only have a value if "isRoutine" is false. creationDate will only have a a value if "isRoutine" is true.
-  DateTime? creationDate;
+  String? creationDate;
   int? routineOrder;
   int? parent;
   int? sets;
@@ -30,7 +30,7 @@ class ExerciseContainer {
             'Id': id,
             'Name': name,
             'Description': description,
-            'isRoutine': isRoutine,
+            'isRoutine': isRoutine ? 1 : 0,
             'CreationDate': creationDate,
             'RoutineOrder': routineOrder,
             'Parent': parent,
@@ -39,7 +39,7 @@ class ExerciseContainer {
         : {
             'Name': name,
             'Description': description,
-            'isRoutine': isRoutine,
+            'isRoutine': isRoutine ? 1 : 0,
             'CreationDate': creationDate,
             'RoutineOrder': routineOrder,
             'Parent': parent,

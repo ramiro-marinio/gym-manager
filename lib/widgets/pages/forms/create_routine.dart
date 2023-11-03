@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:gymmanager/providers/db/dbprovider.dart';
 import 'package:gymmanager/providers/db/resources/exercise.dart';
 import 'package:gymmanager/providers/db/resources/exercisecontainer.dart';
@@ -17,7 +18,8 @@ class CreateRoutine extends StatefulWidget {
 }
 
 class _CreateRoutineState extends State<CreateRoutine> {
-  //The routine will hold all exercises and supersets
+  TextEditingController name = TextEditingController();
+  TextEditingController description = TextEditingController();
   @override
   Widget build(BuildContext context) {
     List<Widget> routine = context.watch<RoutineProvider>().routine;
@@ -90,28 +92,86 @@ class _CreateRoutineState extends State<CreateRoutine> {
         body: routine.isEmpty
             ? const NoExercises()
             : ReorderableListView(
-                header: const Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 10),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      "Routine",
-                      textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.w900),
+                header: Column(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 10, bottom: 10),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Text(
+                          "Routine",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 25, fontWeight: FontWeight.w900),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                footer: ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.check),
-                  label: const Text("CREATE ROUTINE"),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: name,
+                        autocorrect: false,
+                        decoration: const InputDecoration(
+                          hintText: "Routine Name",
+                          border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.black, width: 2),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Gap(5),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: description,
+                        autocorrect: false,
+                        decoration: const InputDecoration(
+                            hintText: "Description",
+                            border: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.black, width: 2))),
+                        maxLines: 4,
+                      ),
+                    ),
+                  ],
                 ),
                 onReorder: (oldIndex, newIndex) {
                   context.read<RoutineProvider>().reorder(oldIndex, newIndex);
                 },
                 children: routine,
               ),
+        floatingActionButton: routine.isNotEmpty
+            ? FloatingActionButton(
+                onPressed: () {
+                  context.read<RoutineProvider>().createRoutine(
+                    context,
+                    () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Text("Your routine was created successfully!"),
+                            ],
+                          ),
+                        ),
+                      );
+                      Navigator.pop(context);
+                    },
+                    name.text,
+                    description.text,
+                  );
+                },
+                child: const Icon(Icons.check),
+              )
+            : null,
       ),
     );
   }

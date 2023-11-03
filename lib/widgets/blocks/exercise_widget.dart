@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gymmanager/functions/displaytime.dart';
 import 'package:gymmanager/providers/db/resources/exercise.dart';
+import 'package:gymmanager/widgets/blocks/minitextfield.dart';
 import 'package:gymmanager/widgets/blocks/superset/miniexercisewidget.dart';
 import 'package:gymmanager/widgets/blocks/time_setter.dart';
 
@@ -72,17 +73,9 @@ class _ExerciseWidgetState extends State<ExerciseWidget> {
                             width: 40,
                             height: unit ? 20 : 25,
                             child: unit
-                                ? TextField(
+                                ? MiniTextField(
                                     controller: exercise.amount,
                                     enabled: !exercise.dropset,
-                                    keyboardType: TextInputType.number,
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      contentPadding:
-                                          EdgeInsets.symmetric(vertical: 0),
-                                    ),
-                                    textAlignVertical: TextAlignVertical.center,
-                                    maxLines: 1,
                                   )
                                 : Card(
                                     color: Colors.transparent,
@@ -129,20 +122,7 @@ class _ExerciseWidgetState extends State<ExerciseWidget> {
                             "Sets:",
                             style: TextStyle(fontSize: 18),
                           ),
-                          SizedBox(
-                            width: 40,
-                            height: 20,
-                            child: TextField(
-                              controller: exercise.sets,
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                contentPadding:
-                                    EdgeInsets.symmetric(vertical: 0),
-                              ),
-                              textAlignVertical: TextAlignVertical.center,
-                            ),
-                          ),
+                          MiniTextField(controller: exercise.sets),
                         ],
                       ),
                     ),

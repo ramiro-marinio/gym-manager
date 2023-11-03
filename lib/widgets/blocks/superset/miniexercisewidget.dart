@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gymmanager/functions/displaytime.dart';
 import 'package:gymmanager/providers/db/resources/exercise.dart';
 import 'package:gymmanager/providers/db/resources/exercisetype.dart';
+import 'package:gymmanager/widgets/blocks/minitextfield.dart';
 import 'package:gymmanager/widgets/blocks/time_setter.dart';
 
 class MiniExerciseWidget extends StatefulWidget {
@@ -33,12 +34,17 @@ class _MiniExerciseWidgetState extends State<MiniExerciseWidget> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Text(
-              exerciseType.name,
-              style: const TextStyle(
-                fontSize: 20,
-                color: Colors.black,
-                fontWeight: FontWeight.w900,
+            SizedBox(
+              width: 100,
+              child: AutoSizeText(
+                exerciseType.name,
+                maxLines: 2,
+                wrapWords: false,
+                style: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
             ),
             SizedBox(
@@ -76,16 +82,9 @@ class _MiniExerciseWidgetState extends State<MiniExerciseWidget> {
               width: 40,
               height: exerciseType.repunit ? 20 : 25,
               child: exerciseType.repunit
-                  ? TextField(
+                  ? MiniTextField(
                       controller: exercise.amount,
                       enabled: !exercise.dropset,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(vertical: 0),
-                      ),
-                      textAlignVertical: TextAlignVertical.center,
-                      maxLines: 1,
                     )
                   : Card(
                       color: Colors.transparent,
