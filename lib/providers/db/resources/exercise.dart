@@ -4,10 +4,9 @@ import 'package:gymmanager/providers/db/resources/exercisetype.dart';
 class Exercise {
   final int? id;
   final ExerciseType exerciseType;
-  final Key key;
   TextEditingController amount;
   TextEditingController sets;
-  int routineOrder;
+  int? routineOrder;
   bool dropset;
   bool supersetted;
   final int? parent;
@@ -16,10 +15,9 @@ class Exercise {
     required this.exerciseType,
     required this.amount,
     required this.sets,
-    required this.routineOrder,
+    this.routineOrder,
     required this.dropset,
     required this.supersetted,
-    required this.key,
     this.parent,
   });
   Map<String, dynamic> toJson() {

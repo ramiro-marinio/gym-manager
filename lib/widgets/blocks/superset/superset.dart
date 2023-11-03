@@ -1,25 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/providers/db/dbprovider.dart';
+import 'package:gymmanager/providers/db/resources/exercise.dart';
 import 'package:gymmanager/providers/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/providers/db/resources/exercisetype.dart';
-import 'package:gymmanager/widgets/blocks/superset/miniexercisewidget.dart';
+import 'package:gymmanager/widgets/blocks/exercise_widget.dart';
 import 'package:gymmanager/widgets/pages/forms/exercises/add_exercise.dart';
 import 'package:provider/provider.dart';
 
 class SuperSet extends StatefulWidget {
-  final List<MiniExerciseWidget>? exercises;
   final ExerciseContainer superset;
-  const SuperSet({super.key, required this.superset, this.exercises});
+  const SuperSet({
+    super.key,
+    required this.superset,
+    /*this.children*/
+  });
 
   @override
   State<SuperSet> createState() => _SuperSetState();
 }
 
 class _SuperSetState extends State<SuperSet> {
-  final List<MiniExerciseWidget> _superset = [];
   @override
   Widget build(BuildContext context) {
     List<ExerciseType> exerciseList = context.watch<DbProvider>().exercises;
+    ExerciseContainer superset = widget.superset;
+
+    void delete(int index) {
+      setState(() {
+        superset.children!.removeAt(index);
+      });
+    }
+
     return Card(
       color: const Color.fromARGB(255, 150, 150, 255),
       child: SizedBox(
@@ -29,13 +40,14 @@ class _SuperSetState extends State<SuperSet> {
             ReorderableListView(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              children: _superset,
+              children: superset.children!,
               onReorder: (oldIndex, newIndex) {
                 if (oldIndex < newIndex) {
                   newIndex -= 1;
                 }
-                final MiniExerciseWidget item = _superset.removeAt(oldIndex);
-                _superset.insert(newIndex, item);
+                final ExerciseWidget item =
+                    superset.children!.removeAt(oldIndex);
+                superset.children!.insert(newIndex, item);
               },
             ),
             Row(
@@ -50,22 +62,30 @@ class _SuperSetState extends State<SuperSet> {
                             onChoose: (exerciseType) {
                               setState(() {
                                 Key key = UniqueKey();
-                                _superset.add(
-                                  MiniExerciseWidget(
+                                Exercise e = Exercise(
+                                    amount: TextEditingController(text: "1"),
+                                    sets: TextEditingController(),
+                                    dropset: false,
                                     exerciseType: exerciseType,
+                                    supersetted: true);
+                                superset.children!.add(
+                                  ExerciseWidget(
                                     key: key,
+                                    exercise: e,
+                                    mini: true,
+                                    dropsetSwitch: () {
+                                      e.dropset = !e.dropset;
+                                    },
                                     onDelete: () {
-                                      setState(() {
-                                        int index = 0;
-                                        for (MiniExerciseWidget exercise
-                                            in _superset) {
-                                          if (exercise.key == key) {
-                                            _superset.removeAt(index);
-                                            break;
-                                          }
-                                          index++;
+                                      int index = 0;
+                                      for (ExerciseWidget exercise
+                                          in superset.children!) {
+                                        if (exercise.key == key) {
+                                          delete(index);
+                                          break;
                                         }
-                                      });
+                                        index++;
+                                      }
                                     },
                                   ),
                                 );
@@ -78,6 +98,49 @@ class _SuperSetState extends State<SuperSet> {
                   icon: const Icon(Icons.add),
                   splashRadius: 25,
                 ),
+                Card(
+                  color: const Color.fromARGB(255, 113, 113, 191),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Sets: ${widget.superset.sets}",
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          if (widget.superset.sets != null) {
+                            setState(() {
+                              widget.superset.sets = widget.superset.sets! + 1;
+                            });
+                          }
+                        },
+                        icon: const Icon(Icons.add),
+                        iconSize: 25,
+                        splashRadius: 12.5,
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          if (widget.superset.sets != null) {
+                            if (widget.superset.sets! > 1) {
+                              setState(() {
+                                widget.superset.sets =
+                                    widget.superset.sets! - 1;
+                              });
+                            }
+                          }
+                        },
+                        icon: const Icon(Icons.remove),
+                        iconSize: 25,
+                        splashRadius: 12.5,
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
           ],

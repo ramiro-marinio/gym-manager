@@ -1,52 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:gymmanager/providers/db/dbprovider.dart';
 import 'package:gymmanager/providers/db/resources/exercise.dart';
 import 'package:gymmanager/providers/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/widgets/blocks/exercise_widget.dart';
 import 'package:gymmanager/widgets/blocks/superset/superset.dart';
+import 'package:provider/provider.dart';
 
 class RoutineProvider extends ChangeNotifier {
-  List<Object> data = [];
-  List<Widget> routine = [];
+  //List<Object> data = [];
+  List<Dismissible> routine = [];
   void deleteByKey(Key key) {
-    for (var i = 0; i < data.length; i++) {
-      Object o = data[i];
-      if (o.runtimeType == Exercise) {
-        if ((o as Exercise).key == key) {
-          data.removeAt(i);
-        } else {
-          if ((o as ExerciseContainer).key == key) {
-            data.removeAt(i);
-          }
-        }
+    for (var i = 0; i < routine.length; i++) {
+      Widget w = routine[i];
+      if (w.key == key) {
         routine.removeAt(i);
-        updateOrder();
       }
     }
   }
 
-  void updateOrder() {
-    int i = 0;
-    for (Object o in data) {
-      switch (o.runtimeType) {
-        case Exercise:
-          (o as Exercise).routineOrder = i;
-        case ExerciseContainer:
-          (o as ExerciseContainer).routineOrder = i;
-      }
-      i++;
-    }
-  }
-
-  void add(Object o) {
+  void add(Object o, Key key) {
     bool isExercise = o.runtimeType == Exercise;
-    Key key = isExercise ? (o as Exercise).key : (o as ExerciseContainer).key;
-    if (isExercise) {
-      o = o as Exercise;
-      data.add(o);
-    } else {
-      o = o as ExerciseContainer;
-      data.add(o);
-    }
     routine.add(Dismissible(
       key: key,
       background: Container(
@@ -55,22 +28,20 @@ class RoutineProvider extends ChangeNotifier {
       ),
       direction: DismissDirection.startToEnd,
       onDismissed: (direction) {
-        int length = routine.length;
-        for (var i = 0; i < length; i++) {
-          if (routine[i].key == key) {
-            deleteByKey(key);
-            notifyListeners();
-          }
-        }
+        deleteByKey(key);
+        notifyListeners();
       },
       child: isExercise
           ? ExerciseWidget(
               dropsetSwitch: () {
-                (o as Exercise).dropset = !o.dropset;
+                o.dropset = !o.dropset;
               },
               exercise: o as Exercise,
             )
-          : SuperSet(superset: o as ExerciseContainer),
+          : SuperSet(
+              superset: o as ExerciseContainer,
+              key: key,
+            ),
     ));
     notifyListeners();
   }
@@ -79,9 +50,16 @@ class RoutineProvider extends ChangeNotifier {
     if (oldIndex < newIndex) {
       newIndex -= 1;
     }
-    final Widget item = routine.removeAt(oldIndex);
+    final Dismissible item = routine.removeAt(oldIndex);
     routine.insert(newIndex, item);
     notifyListeners();
-    updateOrder();
+  }
+
+  void createRoutine(BuildContext context) async {
+    final DbProvider dbprovider = context.read<DbProvider>();
+    int routineId =
+        await dbprovider.createRoutine(ExerciseContainer(isRoutine: true));
+    List<Widget> realRoutine =
+        List.generate(routine.length, (index) => routine[index].child);
   }
 }

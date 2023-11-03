@@ -7,7 +7,6 @@ import 'package:gymmanager/providers/routineprovider.dart';
 import 'package:gymmanager/widgets/blocks/add_menu.dart';
 import 'package:gymmanager/widgets/pages/forms/exercises/add_exercise.dart';
 import 'package:gymmanager/widgets/pages/forms/exercises/no_exercises.dart';
-import 'package:gymmanager/widgets/blocks/exitalert.dart';
 import 'package:provider/provider.dart';
 
 class CreateRoutine extends StatefulWidget {
@@ -28,7 +27,25 @@ class _CreateRoutineState extends State<CreateRoutine> {
         showDialog(
           context: context,
           builder: (context) {
-            return const ExitAlert();
+            return AlertDialog(
+              title: const Text("Quit?"),
+              content: const Text(
+                  "If you quit. The routine you are building will not be saved. Proceed anyway?"),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text("NO")),
+                TextButton(
+                    onPressed: () {
+                      context.read<RoutineProvider>().routine.clear();
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    child: const Text("YES")),
+              ],
+            );
           },
         );
         return true;
@@ -48,14 +65,12 @@ class _CreateRoutineState extends State<CreateRoutine> {
                           Key key = UniqueKey();
                           Exercise e = Exercise(
                             exerciseType: exerciseType,
-                            amount: TextEditingController(),
-                            sets: TextEditingController(),
-                            routineOrder: routine.length,
+                            amount: TextEditingController(text: "0"),
+                            sets: TextEditingController(text: "0"),
                             dropset: false,
                             supersetted: false,
-                            key: key,
                           );
-                          context.read<RoutineProvider>().add(e);
+                          context.read<RoutineProvider>().add(e, key);
                         },
                         exercises: exs,
                       );
@@ -65,9 +80,9 @@ class _CreateRoutineState extends State<CreateRoutine> {
               },
               addSuperset: () {
                 Key key = UniqueKey();
-                ExerciseContainer ss =
-                    ExerciseContainer(isRoutine: false, key: key);
-                context.read<RoutineProvider>().add(ss);
+                ExerciseContainer supersetcontainer =
+                    ExerciseContainer(isRoutine: false, sets: 1, children: []);
+                context.read<RoutineProvider>().add(supersetcontainer, key);
               },
             )
           ],

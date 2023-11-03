@@ -1,11 +1,12 @@
-//ExerciseContainer can either be a routine or a superset. Even though it is unintuitive, it's the best way to do it if you have to use sqlite.
-import 'package:flutter/material.dart';
+//ExerciseContainer can either be a routine or a superset.
+//Even though it is unintuitive, it's the best way to do it if you have to use sqlite.
+import 'package:gymmanager/widgets/blocks/exercise_widget.dart';
 
 class ExerciseContainer {
   final int? id;
-  final Key key;
   String? name;
   String? description;
+  List<ExerciseWidget>? children;
   bool isRoutine;
   //sets, parent and routineOrder will only have a value if "isRoutine" is false. creationDate will only have a a value if "isRoutine" is true.
   DateTime? creationDate;
@@ -21,7 +22,7 @@ class ExerciseContainer {
     this.parent,
     this.sets,
     this.routineOrder,
-    required this.key,
+    this.children,
   });
   Map<String, dynamic> toJson() {
     return id != null
