@@ -1,6 +1,6 @@
 CREATE TABLE ExerciseContainers (
     Id INTEGER PRIMARY KEY,
-    Name VARCHAR(200) NOT NULL,
+    Name VARCHAR(200) ,
     Description VARCHAR(5000),
     CreationDate DATE,
     IsRoutine BOOLEAN DEFAULT 1,

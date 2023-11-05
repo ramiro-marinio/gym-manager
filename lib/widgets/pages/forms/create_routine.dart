@@ -89,58 +89,61 @@ class _CreateRoutineState extends State<CreateRoutine> {
             )
           ],
         ),
-        body: routine.isEmpty
-            ? const NoExercises()
-            : ReorderableListView(
-                header: Column(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(top: 10, bottom: 10),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Text(
-                          "Routine",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 25, fontWeight: FontWeight.w900),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        controller: name,
-                        autocorrect: false,
-                        decoration: const InputDecoration(
-                          hintText: "Routine Name",
-                          border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 2),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const Gap(5),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        controller: description,
-                        autocorrect: false,
-                        decoration: const InputDecoration(
-                            hintText: "Description",
-                            border: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.black, width: 2))),
-                        maxLines: 4,
-                      ),
-                    ),
-                  ],
+        body: ReorderableListView(
+          header: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(top: 10, bottom: 10),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    "Routine",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.w900),
+                  ),
                 ),
-                onReorder: (oldIndex, newIndex) {
-                  context.read<RoutineProvider>().reorder(oldIndex, newIndex);
-                },
-                children: routine,
               ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: name,
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                    hintText: "Routine Name",
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black, width: 2),
+                    ),
+                  ),
+                ),
+              ),
+              const Gap(5),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: description,
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                      hintText: "Description",
+                      border: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 2))),
+                  maxLines: 4,
+                ),
+              ),
+              Visibility(
+                visible: routine.isEmpty,
+                child: const Padding(
+                  padding: EdgeInsets.only(top: 30),
+                  child: NoExercises(),
+                ),
+              )
+            ],
+          ),
+          onReorder: (oldIndex, newIndex) {
+            context.read<RoutineProvider>().reorder(oldIndex, newIndex);
+          },
+          children: routine,
+        ),
         floatingActionButton: routine.isNotEmpty
             ? FloatingActionButton(
                 onPressed: () {

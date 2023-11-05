@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gymmanager/providers/db/dbprovider.dart';
+import 'package:gymmanager/providers/db/resources/exercisecontainer.dart';
+import 'package:gymmanager/providers/db/resources/routinewidget.dart';
 import 'package:gymmanager/widgets/navdrawer.dart';
 import 'package:gymmanager/widgets/pages/forms/create_routine.dart';
+import 'package:provider/provider.dart';
 
 class Routines extends StatefulWidget {
   const Routines({super.key});
@@ -12,6 +16,8 @@ class Routines extends StatefulWidget {
 class _RoutinesState extends State<Routines> {
   @override
   Widget build(BuildContext context) {
+    Future<List<ExerciseContainer>> routines =
+        context.watch<DbProvider>().getRoutines();
     return Scaffold(
       appBar: AppBar(title: const Text("My Routines")),
       drawer: const NavDrawer(),
@@ -24,23 +30,31 @@ class _RoutinesState extends State<Routines> {
         },
         child: const Icon(Icons.add),
       ),
-      body: const Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 10, bottom: 10),
-            child: SizedBox(
-              width: double.infinity,
-              child: Text(
-                "My Routines",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w900,
+      body: FutureBuilder(
+        future: routines,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return ListView(children: [
+              const SizedBox(
+                width: double.infinity,
+                child: Text(
+                  "My Routines",
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900),
+                  textAlign: TextAlign.center,
                 ),
               ),
-            ),
-          )
-        ],
+              ...List.generate(
+                snapshot.data!.length,
+                (index) => RoutineWidget(
+                  routine: snapshot.data![index],
+                  exercises: const [],
+                ),
+              )
+            ]);
+          } else {
+            return const CircularProgressIndicator.adaptive();
+          }
+        },
       ),
     );
   }

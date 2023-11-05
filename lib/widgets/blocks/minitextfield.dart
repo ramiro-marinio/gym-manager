@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class MiniTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -20,6 +21,9 @@ class MiniTextField extends StatelessWidget {
           contentPadding: EdgeInsets.symmetric(vertical: 0),
         ),
         textAlignVertical: TextAlignVertical.center,
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter.digitsOnly,
+        ],
       ),
     );
   }

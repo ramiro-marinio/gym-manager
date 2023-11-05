@@ -24,11 +24,6 @@ class DbProvider extends ChangeNotifier {
           }
         }
       },
-      onOpen: (db) {
-        db.execute("DELETE FROM Exercises");
-        db.execute("DELETE FROM ExerciseContainers");
-        print("da fuckin database was opened");
-      },
     );
   }
 
@@ -104,15 +99,29 @@ class DbProvider extends ChangeNotifier {
   Future<int> createSuperset(ExerciseContainer superset) async {
     Database db = await database;
     int id = await db.insert('ExerciseContainers', superset.toJson());
-    notifyListeners();
     return id;
   }
 
   Future<int> createRoutineExercise(Exercise exercise) async {
     Database db = await database;
     int id = await db.insert('Exercises', exercise.toJson());
-    notifyListeners();
     return id;
   }
   //END OF ROUTINE SECTION
+
+  Future<List<ExerciseContainer>> getRoutines() async {
+    Database db = await database;
+    List<Map<String, Object?>> maps =
+        await db.query('ExerciseContainers', where: "IsRoutine=1");
+    return List.generate(maps.length, (index) {
+      Map<String, Object?> map = maps[index];
+      return ExerciseContainer(
+        isRoutine: true,
+        creationDate: map["CreationDate"] as String,
+        name: map["Name"] as String,
+        description: map["Description"] as String,
+        id: map["Id"] as int,
+      );
+    });
+  }
 }
