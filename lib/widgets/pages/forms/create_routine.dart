@@ -24,6 +24,7 @@ class _CreateRoutineState extends State<CreateRoutine> {
   Widget build(BuildContext context) {
     List<Widget> routine = context.watch<CreationProvider>().routine;
     List<ExerciseType> exs = context.watch<DbProvider>().exercises;
+    final formKey = GlobalKey<FormState>();
     return WillPopScope(
       onWillPop: () async {
         showDialog(
@@ -90,54 +91,65 @@ class _CreateRoutineState extends State<CreateRoutine> {
           ],
         ),
         body: ReorderableListView(
-          header: Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(top: 10, bottom: 10),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    "Routine",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.w900),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: name,
-                  autocorrect: false,
-                  decoration: const InputDecoration(
-                    hintText: "Routine Name",
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black, width: 2),
+          header: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(top: 10, bottom: 10),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      "Routine",
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.w900),
                     ),
                   ),
                 ),
-              ),
-              const Gap(5),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: description,
-                  autocorrect: false,
-                  decoration: const InputDecoration(
-                      hintText: "Description",
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value == null || value == "") {
+                        return "Please insert a name";
+                      }
+                      return null;
+                    },
+                    maxLength: 50,
+                    controller: name,
+                    autocorrect: false,
+                    decoration: const InputDecoration(
+                      hintText: "Routine Name",
                       border: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.black, width: 2))),
-                  maxLines: 4,
+                        borderSide: BorderSide(color: Colors.black, width: 2),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              Visibility(
-                visible: routine.isEmpty,
-                child: const Padding(
-                  padding: EdgeInsets.only(top: 30),
-                  child: NoExercises(),
+                const Gap(5),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: description,
+                    autocorrect: false,
+                    decoration: const InputDecoration(
+                        hintText: "Description",
+                        border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.black, width: 2))),
+                    maxLines: 4,
+                  ),
                 ),
-              )
-            ],
+                Visibility(
+                  visible: routine.isEmpty,
+                  child: const Padding(
+                    padding: EdgeInsets.only(top: 30),
+                    child: NoExercises(),
+                  ),
+                )
+              ],
+            ),
           ),
           onReorder: (oldIndex, newIndex) {
             context.read<CreationProvider>().reorder(oldIndex, newIndex);
@@ -147,30 +159,32 @@ class _CreateRoutineState extends State<CreateRoutine> {
         floatingActionButton: routine.isNotEmpty
             ? FloatingActionButton(
                 onPressed: () {
-                  context.read<CreationProvider>().createRoutine(
-                    context,
-                    () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Icon(
-                                  Icons.check,
-                                  color: Colors.white,
+                  if (formKey.currentState!.validate()) {
+                    context.read<CreationProvider>().createRoutine(
+                      context,
+                      () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.check,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              ),
-                              Text("Your routine was created successfully!"),
-                            ],
+                                Text("Your routine was created successfully!"),
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                      Navigator.pop(context);
-                    },
-                    name.text,
-                    description.text,
-                  );
+                        );
+                        Navigator.pop(context);
+                      },
+                      name.text,
+                      description.text,
+                    );
+                  }
                 },
                 child: const Icon(Icons.check),
               )

@@ -34,7 +34,6 @@ class _RoutinesState extends State<Routines> {
         future: routines,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            print(snapshot.data);
             return ListView(children: [
               const SizedBox(
                 width: double.infinity,

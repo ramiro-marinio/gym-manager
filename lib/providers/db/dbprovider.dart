@@ -115,17 +115,16 @@ class DbProvider extends ChangeNotifier {
   Future<List<Map<String, Object>>> getRoutines() async {
     Database db = await database;
     List<Map<String, Object>> result = [];
-    List<Map<String, Object?>> routineInfoMaps =
+    List<Map<String, Object?>> routineMaps =
         await db.query('ExerciseContainers', where: "IsRoutine=1");
-    for (var i = 0; i < routineInfoMaps.length; i++) {
-      Map<String, Object?> map = routineInfoMaps[i];
+    for (var i = 0; i < routineMaps.length; i++) {
+      Map<String, Object?> map = routineMaps[i];
       List<Exercise> exercises = await generateExercises(
           db, await db.query("Exercises", where: "Parent=${map["Id"]}"));
       List<ExerciseContainer> exerciseContainerMaps = await generateSupersets(
           await db.query("ExerciseContainers",
               where: "IsRoutine=0 AND Parent=${map["Id"]}"),
           db);
-      print('THESE ARE THE EXERCISES!!! $exercises');
       result.add({
         'routineData': generateRoutine(map),
         'exercises': [...exercises, ...exerciseContainerMaps]
