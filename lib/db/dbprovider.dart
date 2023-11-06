@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gymmanager/providers/db/functions/generateexercises.dart';
-import 'package:gymmanager/providers/db/functions/generateroutine.dart';
-import 'package:gymmanager/providers/db/functions/generatesupersets.dart';
-import 'package:gymmanager/providers/db/resources/exercise.dart';
-import 'package:gymmanager/providers/db/resources/exercisecontainer.dart';
-import 'package:gymmanager/providers/db/resources/exercisetype.dart';
+import 'package:gymmanager/db/functions/generateexercises.dart';
+import 'package:gymmanager/db/functions/generateroutine.dart';
+import 'package:gymmanager/db/functions/generatesupersets.dart';
+import 'package:gymmanager/db/resources/exercise.dart';
+import 'package:gymmanager/db/resources/exercisecontainer.dart';
+import 'package:gymmanager/db/resources/exercisetype.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/services.dart' show rootBundle;
 

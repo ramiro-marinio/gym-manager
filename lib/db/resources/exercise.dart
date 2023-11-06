@@ -1,4 +1,4 @@
-import 'package:gymmanager/providers/db/resources/exercisetype.dart';
+import 'package:gymmanager/db/resources/exercisetype.dart';
 
 class Exercise {
   final int? id;

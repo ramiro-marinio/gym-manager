@@ -1,5 +1,5 @@
-import 'package:gymmanager/providers/db/resources/exercise.dart';
-import 'package:gymmanager/providers/db/resources/exercisetype.dart';
+import 'package:gymmanager/db/resources/exercise.dart';
+import 'package:gymmanager/db/resources/exercisetype.dart';
 import 'package:sqflite/sqflite.dart';
 
 Future<List<Exercise>> generateExercises(

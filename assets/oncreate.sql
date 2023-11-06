@@ -30,14 +30,15 @@ CREATE TABLE Exercises (
 CREATE TABLE RoutineRecords (
     Id INTEGER PRIMARY KEY,
     Moment DATETIME NOT NULL,
-    RoutineId INTEGER,
+    RoutineId INTEGER NOT NULL,
     FOREIGN KEY (RoutineId) REFERENCES ExerciseContainers(Id)
 );
 CREATE TABLE ExerciseRecords(
     Id INTEGER PRIMARY KEY,
     ExerciseType INTEGER NOT NULL,
-    RecordId INTEGER
+    RecordId INTEGER NOT NULL,
     Amount INTEGER NOT NULL,
+    Weight INTEGER,
     Sets INTEGER NOT NULL,
     FOREIGN KEY (ExerciseType) REFERENCES ExerciseTypes(Id) ON DELETE CASCADE,
     FOREIGN KEY (RecordId) REFERENCES RoutineRecords(Id) ON DELETE CASCADE

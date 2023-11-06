@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gymmanager/functions/displaytime.dart';
-import 'package:gymmanager/providers/db/resources/exercise.dart';
+import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/widgets/blocks/minitextfield.dart';
 import 'package:gymmanager/widgets/blocks/superset/miniexercisewidget.dart';
 import 'package:gymmanager/widgets/blocks/time_setter.dart';

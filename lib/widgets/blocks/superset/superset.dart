@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gymmanager/providers/db/dbprovider.dart';
-import 'package:gymmanager/providers/db/resources/exercise.dart';
-import 'package:gymmanager/providers/db/resources/exercisecontainer.dart';
-import 'package:gymmanager/providers/db/resources/exercisetype.dart';
+import 'package:gymmanager/db/dbprovider.dart';
+import 'package:gymmanager/db/resources/exercise.dart';
+import 'package:gymmanager/db/resources/exercisecontainer.dart';
+import 'package:gymmanager/db/resources/exercisetype.dart';
 import 'package:gymmanager/widgets/blocks/exercise_widget.dart';
 import 'package:gymmanager/widgets/pages/forms/exercises/add_exercise.dart';
 import 'package:provider/provider.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gymmanager/providers/db/dbprovider.dart';
+import 'package:gymmanager/db/dbprovider.dart';
 import 'package:gymmanager/providers/routinecreationprovider.dart';
 import 'package:gymmanager/providers/routineplayprovider.dart';
 import 'package:gymmanager/widgets/pages/exercisemanager.dart';

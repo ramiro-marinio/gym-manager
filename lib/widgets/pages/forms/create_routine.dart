@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:gymmanager/providers/db/dbprovider.dart';
-import 'package:gymmanager/providers/db/resources/exercise.dart';
-import 'package:gymmanager/providers/db/resources/exercisecontainer.dart';
-import 'package:gymmanager/providers/db/resources/exercisetype.dart';
+import 'package:gymmanager/db/dbprovider.dart';
+import 'package:gymmanager/db/resources/exercise.dart';
+import 'package:gymmanager/db/resources/exercisecontainer.dart';
+import 'package:gymmanager/db/resources/exercisetype.dart';
 import 'package:gymmanager/providers/routinecreationprovider.dart';
 import 'package:gymmanager/widgets/blocks/add_menu.dart';
 import 'package:gymmanager/widgets/pages/forms/exercises/add_exercise.dart';

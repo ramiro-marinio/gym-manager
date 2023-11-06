@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gymmanager/providers/db/resources/exercisetype.dart';
+import 'package:gymmanager/db/resources/exercisetype.dart';
 import 'package:gymmanager/widgets/pages/forms/exercises/create_exercise.dart';
 
 class AddExercise extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gymmanager/providers/db/dbprovider.dart';
-import 'package:gymmanager/providers/db/resources/exercise.dart';
-import 'package:gymmanager/providers/db/resources/exercisecontainer.dart';
+import 'package:gymmanager/db/dbprovider.dart';
+import 'package:gymmanager/db/resources/exercise.dart';
+import 'package:gymmanager/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/widgets/blocks/exercise_widget.dart';
 import 'package:gymmanager/widgets/blocks/superset/superset.dart';
 import 'package:intl/intl.dart';
@@ -86,9 +86,8 @@ class CreationProvider extends ChangeNotifier {
         case ExerciseContainer:
           o = o as ExerciseContainer;
           o.parent = routineId;
-          int supersetId = await dbprovider.createSuperset(o);
-          o.parent = routineId;
           o.routineOrder = index;
+          int supersetId = await dbprovider.createSuperset(o);
           int i = 0;
           for (ExerciseWidget ew in o.children!) {
             Exercise ex = ew.exercise;
@@ -96,6 +95,7 @@ class CreationProvider extends ChangeNotifier {
             ex.routineOrder = i;
             ex.parent = supersetId;
             await dbprovider.createRoutineExercise(ex);
+            i++;
           }
       }
       index++;

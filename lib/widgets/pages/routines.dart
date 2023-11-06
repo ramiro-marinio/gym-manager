@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gymmanager/providers/db/dbprovider.dart';
-import 'package:gymmanager/providers/db/resources/exercisecontainer.dart';
+import 'package:gymmanager/db/dbprovider.dart';
+import 'package:gymmanager/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/widgets/blocks/routinewidget.dart';
 import 'package:gymmanager/widgets/navdrawer.dart';
 import 'package:gymmanager/widgets/pages/forms/create_routine.dart';
@@ -37,10 +37,13 @@ class _RoutinesState extends State<Routines> {
             return ListView(children: [
               const SizedBox(
                 width: double.infinity,
-                child: Text(
-                  "My Routines",
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900),
-                  textAlign: TextAlign.center,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: Text(
+                    "My Routines",
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
               ...List.generate(

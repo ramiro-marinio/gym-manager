@@ -1,4 +1,4 @@
-import 'package:gymmanager/providers/db/resources/exercisecontainer.dart';
+import 'package:gymmanager/db/resources/exercisecontainer.dart';
 
 ExerciseContainer generateRoutine(Map<String, Object?> map) {
   return ExerciseContainer(
