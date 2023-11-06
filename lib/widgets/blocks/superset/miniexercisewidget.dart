@@ -83,7 +83,9 @@ class _MiniExerciseWidgetState extends State<MiniExerciseWidget> {
               height: exerciseType.repunit ? 20 : 25,
               child: exerciseType.repunit
                   ? MiniTextField(
-                      controller: exercise.amount,
+                      changeHandler: (value) {
+                        exercise.amount = int.parse(value);
+                      },
                       enabled: !exercise.dropset,
                     )
                   : Card(
@@ -97,8 +99,7 @@ class _MiniExerciseWidgetState extends State<MiniExerciseWidget> {
                                     return TimeSetter(
                                       setTime: (int seconds) {
                                         setState(() {
-                                          widget.exercise.amount.text =
-                                              seconds.toString();
+                                          widget.exercise.amount = seconds;
                                         });
                                       },
                                     );
@@ -110,7 +111,7 @@ class _MiniExerciseWidgetState extends State<MiniExerciseWidget> {
                           child: AutoSizeText(
                             !exercise.dropset
                                 ? displayTime(
-                                    int.parse(exercise.amount.text),
+                                    exercise.amount,
                                   )
                                 : "-",
                           ),

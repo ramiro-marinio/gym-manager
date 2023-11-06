@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gymmanager/providers/db/functions/generateexercises.dart';
+import 'package:gymmanager/providers/db/functions/generateroutine.dart';
+import 'package:gymmanager/providers/db/functions/generatesupersets.dart';
 import 'package:gymmanager/providers/db/resources/exercise.dart';
 import 'package:gymmanager/providers/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/providers/db/resources/exercisetype.dart';
@@ -109,19 +112,25 @@ class DbProvider extends ChangeNotifier {
   }
   //END OF ROUTINE SECTION
 
-  Future<List<ExerciseContainer>> getRoutines() async {
+  Future<List<Map<String, Object>>> getRoutines() async {
     Database db = await database;
-    List<Map<String, Object?>> maps =
+    List<Map<String, Object>> result = [];
+    List<Map<String, Object?>> routineInfoMaps =
         await db.query('ExerciseContainers', where: "IsRoutine=1");
-    return List.generate(maps.length, (index) {
-      Map<String, Object?> map = maps[index];
-      return ExerciseContainer(
-        isRoutine: true,
-        creationDate: map["CreationDate"] as String,
-        name: map["Name"] as String,
-        description: map["Description"] as String,
-        id: map["Id"] as int,
-      );
-    });
+    for (var i = 0; i < routineInfoMaps.length; i++) {
+      Map<String, Object?> map = routineInfoMaps[i];
+      List<Exercise> exercises = await generateExercises(
+          db, await db.query("Exercises", where: "Parent=${map["Id"]}"));
+      List<ExerciseContainer> exerciseContainerMaps = await generateSupersets(
+          await db.query("ExerciseContainers",
+              where: "IsRoutine=0 AND Parent=${map["Id"]}"),
+          db);
+      print('THESE ARE THE EXERCISES!!! $exercises');
+      result.add({
+        'routineData': generateRoutine(map),
+        'exercises': [...exercises, ...exerciseContainerMaps]
+      });
+    }
+    return result;
   }
 }

@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:gymmanager/providers/db/resources/exercisetype.dart';
 
 class Exercise {
   final int? id;
   final ExerciseType exerciseType;
-  TextEditingController amount;
-  TextEditingController sets;
+  int amount;
+  int sets;
   int? routineOrder;
   bool dropset;
   bool supersetted;
@@ -25,8 +24,8 @@ class Exercise {
         ? {
             'Id': id,
             'ExerciseType': exerciseType.id,
-            'Amount': int.parse(amount.text),
-            'Sets': int.parse(sets.text),
+            'Amount': amount,
+            'Sets': sets,
             'RoutineOrder': routineOrder,
             'Dropset': dropset ? 1 : 0,
             'Supersetted': supersetted ? 1 : 0,
@@ -34,8 +33,8 @@ class Exercise {
           }
         : {
             'ExerciseType': exerciseType.id,
-            'Amount': int.tryParse(amount.text) ?? 1,
-            'Sets': int.tryParse(sets.text) ?? 1,
+            'Amount': amount,
+            'Sets': sets,
             'RoutineOrder': routineOrder,
             'Dropset': dropset ? 1 : 0,
             'Supersetted': supersetted ? 1 : 0,

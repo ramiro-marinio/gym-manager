@@ -4,7 +4,7 @@ import 'package:gymmanager/providers/db/dbprovider.dart';
 import 'package:gymmanager/providers/db/resources/exercise.dart';
 import 'package:gymmanager/providers/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/providers/db/resources/exercisetype.dart';
-import 'package:gymmanager/providers/routineprovider.dart';
+import 'package:gymmanager/providers/routinecreationprovider.dart';
 import 'package:gymmanager/widgets/blocks/add_menu.dart';
 import 'package:gymmanager/widgets/pages/forms/exercises/add_exercise.dart';
 import 'package:gymmanager/widgets/pages/forms/exercises/no_exercises.dart';
@@ -22,7 +22,7 @@ class _CreateRoutineState extends State<CreateRoutine> {
   TextEditingController description = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    List<Widget> routine = context.watch<RoutineProvider>().routine;
+    List<Widget> routine = context.watch<CreationProvider>().routine;
     List<ExerciseType> exs = context.watch<DbProvider>().exercises;
     return WillPopScope(
       onWillPop: () async {
@@ -41,7 +41,7 @@ class _CreateRoutineState extends State<CreateRoutine> {
                     child: const Text("NO")),
                 TextButton(
                     onPressed: () {
-                      context.read<RoutineProvider>().routine.clear();
+                      context.read<CreationProvider>().routine.clear();
                       Navigator.pop(context);
                       Navigator.pop(context);
                     },
@@ -67,12 +67,12 @@ class _CreateRoutineState extends State<CreateRoutine> {
                           Key key = UniqueKey();
                           Exercise e = Exercise(
                             exerciseType: exerciseType,
-                            amount: TextEditingController(text: "0"),
-                            sets: TextEditingController(text: "0"),
+                            amount: 0,
+                            sets: 0,
                             dropset: false,
                             supersetted: false,
                           );
-                          context.read<RoutineProvider>().add(e, key);
+                          context.read<CreationProvider>().add(e, key);
                         },
                         exercises: exs,
                       );
@@ -84,7 +84,7 @@ class _CreateRoutineState extends State<CreateRoutine> {
                 Key key = UniqueKey();
                 ExerciseContainer supersetcontainer =
                     ExerciseContainer(isRoutine: false, sets: 1, children: []);
-                context.read<RoutineProvider>().add(supersetcontainer, key);
+                context.read<CreationProvider>().add(supersetcontainer, key);
               },
             )
           ],
@@ -140,14 +140,14 @@ class _CreateRoutineState extends State<CreateRoutine> {
             ],
           ),
           onReorder: (oldIndex, newIndex) {
-            context.read<RoutineProvider>().reorder(oldIndex, newIndex);
+            context.read<CreationProvider>().reorder(oldIndex, newIndex);
           },
           children: routine,
         ),
         floatingActionButton: routine.isNotEmpty
             ? FloatingActionButton(
                 onPressed: () {
-                  context.read<RoutineProvider>().createRoutine(
+                  context.read<CreationProvider>().createRoutine(
                     context,
                     () {
                       ScaffoldMessenger.of(context).showSnackBar(

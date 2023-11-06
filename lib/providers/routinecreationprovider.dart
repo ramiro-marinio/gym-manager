@@ -7,7 +7,7 @@ import 'package:gymmanager/widgets/blocks/superset/superset.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class RoutineProvider extends ChangeNotifier {
+class CreationProvider extends ChangeNotifier {
   //List<Object> data = [];
   List<Dismissible> routine = [];
   void deleteByKey(Key key) {
@@ -81,10 +81,11 @@ class RoutineProvider extends ChangeNotifier {
           o = o as Exercise;
           o.routineOrder = index;
           o.parent = routineId;
+          await dbprovider.createRoutineExercise(o);
         //dbprovider.createRoutineExercise(o);
         case ExerciseContainer:
           o = o as ExerciseContainer;
-          (o).parent = routineId;
+          o.parent = routineId;
           int supersetId = await dbprovider.createSuperset(o);
           o.parent = routineId;
           o.routineOrder = index;
@@ -94,6 +95,7 @@ class RoutineProvider extends ChangeNotifier {
             ex.supersetted = true;
             ex.routineOrder = i;
             ex.parent = supersetId;
+            await dbprovider.createRoutineExercise(ex);
           }
       }
       index++;

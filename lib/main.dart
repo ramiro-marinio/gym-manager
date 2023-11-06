@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymmanager/providers/db/dbprovider.dart';
-import 'package:gymmanager/providers/routineprovider.dart';
+import 'package:gymmanager/providers/routinecreationprovider.dart';
+import 'package:gymmanager/providers/routineplayprovider.dart';
 import 'package:gymmanager/widgets/pages/exercisemanager.dart';
 import 'package:gymmanager/widgets/pages/homescreen.dart';
 import 'package:gymmanager/widgets/pages/routines.dart';
@@ -25,7 +26,9 @@ void main() {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider<DbProvider>(create: (_) => DbProvider()),
-      ChangeNotifierProvider<RoutineProvider>(create: (_) => RoutineProvider()),
+      ChangeNotifierProvider<CreationProvider>(
+          create: (_) => CreationProvider()),
+      ChangeNotifierProvider(create: (_) => RoutinePlayProvider()),
     ],
     child: MaterialApp.router(
       title: "Gym Manager",

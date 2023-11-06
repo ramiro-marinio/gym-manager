@@ -74,7 +74,9 @@ class _ExerciseWidgetState extends State<ExerciseWidget> {
                             height: unit ? 20 : 25,
                             child: unit
                                 ? MiniTextField(
-                                    controller: exercise.amount,
+                                    changeHandler: (String value) {
+                                      exercise.amount = int.parse(value);
+                                    },
                                     enabled: !exercise.dropset,
                                   )
                                 : Card(
@@ -88,9 +90,8 @@ class _ExerciseWidgetState extends State<ExerciseWidget> {
                                                   return TimeSetter(
                                                     setTime: (int seconds) {
                                                       setState(() {
-                                                        widget.exercise.amount
-                                                                .text =
-                                                            seconds.toString();
+                                                        widget.exercise.amount =
+                                                            seconds;
                                                       });
                                                     },
                                                   );
@@ -101,8 +102,7 @@ class _ExerciseWidgetState extends State<ExerciseWidget> {
                                       child: Center(
                                         child: AutoSizeText(
                                           !exercise.dropset
-                                              ? displayTime(int.tryParse(
-                                                  exercise.amount.text)!)
+                                              ? displayTime(exercise.amount)
                                               : "-",
                                         ),
                                       ),
@@ -122,7 +122,11 @@ class _ExerciseWidgetState extends State<ExerciseWidget> {
                             "Sets:",
                             style: TextStyle(fontSize: 18),
                           ),
-                          MiniTextField(controller: exercise.sets),
+                          MiniTextField(
+                            changeHandler: (value) {
+                              exercise.sets = int.parse(value);
+                            },
+                          ),
                         ],
                       ),
                     ),

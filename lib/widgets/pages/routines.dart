@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/providers/db/dbprovider.dart';
 import 'package:gymmanager/providers/db/resources/exercisecontainer.dart';
-import 'package:gymmanager/providers/db/resources/routinewidget.dart';
+import 'package:gymmanager/widgets/blocks/routinewidget.dart';
 import 'package:gymmanager/widgets/navdrawer.dart';
 import 'package:gymmanager/widgets/pages/forms/create_routine.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +16,7 @@ class Routines extends StatefulWidget {
 class _RoutinesState extends State<Routines> {
   @override
   Widget build(BuildContext context) {
-    Future<List<ExerciseContainer>> routines =
+    Future<List<Map<String, Object>>> routines =
         context.watch<DbProvider>().getRoutines();
     return Scaffold(
       appBar: AppBar(title: const Text("My Routines")),
@@ -34,6 +34,7 @@ class _RoutinesState extends State<Routines> {
         future: routines,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
+            print(snapshot.data);
             return ListView(children: [
               const SizedBox(
                 width: double.infinity,
@@ -46,8 +47,9 @@ class _RoutinesState extends State<Routines> {
               ...List.generate(
                 snapshot.data!.length,
                 (index) => RoutineWidget(
-                  routine: snapshot.data![index],
-                  exercises: const [],
+                  routine:
+                      snapshot.data![index]["routineData"] as ExerciseContainer,
+                  exercises: snapshot.data![index]["exercises"] as List<Object>,
                 ),
               )
             ]);

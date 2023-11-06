@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class MiniTextField extends StatelessWidget {
-  final TextEditingController controller;
   final bool enabled;
+  final Function(String) changeHandler;
   const MiniTextField(
-      {super.key, required this.controller, this.enabled = true});
+      {super.key, this.enabled = true, required this.changeHandler});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,9 @@ class MiniTextField extends StatelessWidget {
       width: 40,
       height: 20,
       child: TextField(
-        controller: controller,
+        onChanged: (value) {
+          changeHandler(value);
+        },
         enabled: enabled,
         keyboardType: TextInputType.number,
         decoration: const InputDecoration(
