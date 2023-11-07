@@ -102,7 +102,9 @@ class _ExerciseWidgetState extends State<ExerciseWidget> {
                                       child: Center(
                                         child: AutoSizeText(
                                           !exercise.dropset
-                                              ? displayTime(exercise.amount)
+                                              ? displayTime(Duration(
+                                                  seconds: exercise.amount,
+                                                ))
                                               : "-",
                                         ),
                                       ),

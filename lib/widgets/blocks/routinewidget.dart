@@ -55,8 +55,8 @@ class _RoutineWidgetState extends State<RoutineWidget> {
                   child: IconButton(
                     onPressed: () {
                       routinePlayProvider.currentRoutine ??= widget.routine;
-                      if (routinePlayProvider.currentRoutine ==
-                          widget.routine) {
+                      if (routinePlayProvider.currentRoutine!.id ==
+                          widget.routine.id) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(

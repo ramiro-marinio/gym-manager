@@ -25,6 +25,7 @@ class MiniTextField extends StatelessWidget {
         textAlignVertical: TextAlignVertical.center,
         inputFormatters: <TextInputFormatter>[
           FilteringTextInputFormatter.digitsOnly,
+          LengthLimitingTextInputFormatter(2),
         ],
       ),
     );

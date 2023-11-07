@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercisetype.dart';
-import 'package:gymmanager/db/dbprovider.dart';
+import 'package:gymmanager/providers/dbprovider.dart';
 import 'package:provider/provider.dart';
 
 class CreateExercise extends StatefulWidget {
@@ -20,13 +20,13 @@ class _CreateExerciseState extends State<CreateExercise> {
   final titleStyle = const TextStyle(fontWeight: FontWeight.w900, fontSize: 30);
   TextEditingController? namecontroller;
   TextEditingController? descriptioncontroller;
-  bool? val;
+  bool? repunit;
   @override
   Widget build(BuildContext context) {
     namecontroller ??= TextEditingController(text: widget.exercise?.name);
     descriptioncontroller ??=
         TextEditingController(text: widget.exercise?.description);
-    val ??= widget.exercise != null ? widget.exercise!.repunit : true;
+    repunit ??= widget.exercise != null ? widget.exercise!.repunit : true;
     return Scaffold(
       appBar: AppBar(
           title: Text(!widget.modifyMode
@@ -80,10 +80,10 @@ class _CreateExerciseState extends State<CreateExercise> {
                           child: Transform.scale(
                             scale: 1.3,
                             child: Switch(
-                              value: val!,
+                              value: repunit!,
                               onChanged: (value) {
                                 setState(() {
-                                  val = !val!;
+                                  repunit = !repunit!;
                                 });
                               },
                             ),
@@ -92,7 +92,7 @@ class _CreateExerciseState extends State<CreateExercise> {
                         const Icon(Icons.fitness_center),
                         Expanded(
                           child: AutoSizeText(
-                            "The exercise will be measured in ${val! ? 'reps' : 'time'}",
+                            "The exercise will be measured in ${repunit! ? 'reps' : 'time'}",
                             style: const TextStyle(fontSize: 20),
                             maxLines: 1,
                           ),
@@ -108,7 +108,7 @@ class _CreateExerciseState extends State<CreateExercise> {
                                 ExerciseType(
                                   name: namecontroller!.text,
                                   description: descriptioncontroller!.text,
-                                  repunit: val!,
+                                  repunit: repunit!,
                                 ),
                               );
                         } else {
@@ -117,7 +117,7 @@ class _CreateExerciseState extends State<CreateExercise> {
                                   id: widget.exercise!.id,
                                   name: namecontroller!.text,
                                   description: descriptioncontroller!.text,
-                                  repunit: val!,
+                                  repunit: repunit!,
                                 ),
                               );
                         }

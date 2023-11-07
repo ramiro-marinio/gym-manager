@@ -1,5 +1,5 @@
-String displayTime(int secs) {
-  int seconds = secs % 60;
-  int minutes = (secs - seconds) ~/ 60;
-  return seconds >= 10 ? '$minutes:$seconds' : '$minutes:0$seconds';
+String displayTime(Duration duration) {
+  String sDuration =
+      "${duration.inMinutes.remainder(60)}:${(duration.inSeconds.remainder(60)).toString().padLeft(2, '0')}";
+  return sDuration;
 }

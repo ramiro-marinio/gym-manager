@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gymmanager/db/dbprovider.dart';
+import 'package:gymmanager/providers/dbprovider.dart';
 import 'package:gymmanager/providers/routinecreationprovider.dart';
 import 'package:gymmanager/providers/routineplayprovider.dart';
 import 'package:gymmanager/widgets/pages/exercisemanager.dart';
@@ -37,6 +37,8 @@ void main() {
           primarySwatch: Colors.indigo,
         ),
         scaffoldBackgroundColor: Colors.blue[100],
+        sliderTheme: const SliderThemeData(
+            showValueIndicator: ShowValueIndicator.always),
       ),
       routerConfig: gorouter,
     ),

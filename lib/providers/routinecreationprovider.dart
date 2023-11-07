@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gymmanager/db/dbprovider.dart';
+import 'package:gymmanager/providers/dbprovider.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/widgets/blocks/exercise_widget.dart';

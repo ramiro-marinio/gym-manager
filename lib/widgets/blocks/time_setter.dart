@@ -26,12 +26,12 @@ class _TimeSetterState extends State<TimeSetter> {
                     width: 180,
                     child: Slider(
                       value: minutes.toDouble(),
-                      max: 60,
+                      max: 59,
                       activeColor: Color.fromARGB(
                           255,
-                          (255 / 60 * minutes).toInt(),
+                          (255 / 59 * minutes).toInt(),
                           0,
-                          255 - (255 / 60 * minutes).toInt()),
+                          255 - (255 / 59 * minutes).toInt()),
                       onChanged: (value) {
                         setState(() {
                           minutes = value.toInt();
