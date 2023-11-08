@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/providers/routineplayprovider.dart';
-import 'package:gymmanager/widgets/routines/playroutine.dart';
+import 'package:gymmanager/widgets/routines/stats/playroutine.dart';
 import 'package:gymmanager/widgets/routines/view_routine/widgets/showroutine.dart';
 import 'package:provider/provider.dart';
 
 class RoutineWidget extends StatefulWidget {
   final ExerciseContainer routine;
   final List<Object> exercises;
-  const RoutineWidget(
-      {super.key, required this.routine, required this.exercises});
+  const RoutineWidget({
+    super.key,
+    required this.routine,
+    required this.exercises,
+  });
 
   @override
   State<RoutineWidget> createState() => _RoutineWidgetState();
@@ -19,7 +22,7 @@ class _RoutineWidgetState extends State<RoutineWidget> {
   @override
   Widget build(BuildContext context) {
     RoutinePlayProvider routinePlayProvider =
-        Provider.of<RoutinePlayProvider>(context);
+        context.watch<RoutinePlayProvider>();
     return Padding(
       padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
       child: Card(
@@ -54,10 +57,15 @@ class _RoutineWidgetState extends State<RoutineWidget> {
                   message: "Start Routine",
                   //THIS BUTTON IS THE ROUTINE PLAYER
                   child: IconButton(
+                    color: routinePlayProvider.currentRoutine?.id ==
+                            widget.routine.id
+                        ? Colors.red
+                        : Colors.black,
                     onPressed: () {
                       routinePlayProvider.currentRoutine ??= widget.routine;
                       if (routinePlayProvider.currentRoutine!.id ==
                           widget.routine.id) {
+                        routinePlayProvider.init(widget.routine);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -84,6 +92,7 @@ class _RoutineWidgetState extends State<RoutineWidget> {
                                   onPressed: () {
                                     Navigator.pop(context);
                                     routinePlayProvider.stop();
+                                    routinePlayProvider.init(widget.routine);
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -120,7 +129,11 @@ class _RoutineWidgetState extends State<RoutineWidget> {
                     onPressed: () {
                       Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
-                          return ShowRoutine(routine: widget.exercises);
+                          return ShowRoutine(
+                            routine: widget.exercises,
+                            title: widget.routine.name!,
+                            description: widget.routine.description!,
+                          );
                         },
                       ));
                     },

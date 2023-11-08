@@ -27,19 +27,14 @@ CREATE TABLE Exercises (
     FOREIGN KEY (ExerciseType) REFERENCES ExerciseTypes(Id) ON DELETE CASCADE,
     FOREIGN KEY (Parent) REFERENCES ExerciseContainers(Id) ON DELETE CASCADE
 );
-CREATE TABLE RoutineRecords (
-    Id INTEGER PRIMARY KEY,
-    Moment DATETIME NOT NULL,
-    RoutineId INTEGER NOT NULL,
-    FOREIGN KEY (RoutineId) REFERENCES ExerciseContainers(Id)
-);
-CREATE TABLE ExerciseRecords(
+CREATE TABLE SetRecords(
     Id INTEGER PRIMARY KEY,
     ExerciseType INTEGER NOT NULL,
+    RoutineId INTEGER NOT NULL,
     RecordId INTEGER NOT NULL,
     Amount INTEGER NOT NULL,
     Weight INTEGER,
-    Sets INTEGER NOT NULL,
     FOREIGN KEY (ExerciseType) REFERENCES ExerciseTypes(Id) ON DELETE CASCADE,
-    FOREIGN KEY (RecordId) REFERENCES RoutineRecords(Id) ON DELETE CASCADE
+    FOREIGN KEY (RecordId) REFERENCES RoutineRecords(Id) ON DELETE CASCADE,
+    FOREIGN KEY (RoutineId) REFERENCES ExerciseContainers(Id) ON DELETE CASCADE
 );

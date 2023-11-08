@@ -28,6 +28,7 @@ class RoutinePlayProvider extends ChangeNotifier {
       },
     ).listen((event) {
       time = event;
+      notifyListeners();
     });
     timerActive = true;
     notifyListeners();
@@ -40,5 +41,13 @@ class RoutinePlayProvider extends ChangeNotifier {
     timerActive = false;
     currentExercise = 0;
     currentRoutine = null;
+  }
+
+  void init(ExerciseContainer routine) {
+    currentRoutine = routine;
+    currentExercise = 0;
+    time = 0;
+    timerActive = false;
+    notifyListeners();
   }
 }

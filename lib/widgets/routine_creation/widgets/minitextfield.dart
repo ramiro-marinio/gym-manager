@@ -10,8 +10,8 @@ class MiniTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 40,
       height: 20,
+      width: 40,
       child: TextField(
         onChanged: (value) {
           changeHandler(value);

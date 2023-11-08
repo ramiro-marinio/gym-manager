@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
+import 'package:gymmanager/functions/displaytime.dart';
 import 'package:gymmanager/providers/routineplayprovider.dart';
 import 'package:gymmanager/widgets/routines/stats/recorder.dart';
 import 'package:gymmanager/widgets/infobutton.dart';
@@ -15,7 +16,8 @@ class PlayRoutine extends StatefulWidget {
 }
 
 class _PlayRoutineState extends State<PlayRoutine> {
-  final PageController pc = PageController();
+  int page = 0;
+  final PageController pc = PageController(initialPage: 0, keepPage: true);
   @override
   Widget build(BuildContext context) {
     RoutinePlayProvider provider = Provider.of<RoutinePlayProvider>(context);
@@ -32,7 +34,7 @@ class _PlayRoutineState extends State<PlayRoutine> {
       ),
       body: Column(
         children: [
-          Flexible(
+          Expanded(
             flex: 1,
             child: Material(
               color: const Color.fromARGB(255, 82, 89, 183),
@@ -40,13 +42,25 @@ class _PlayRoutineState extends State<PlayRoutine> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
+                    Text(
+                      displayTime(Duration(seconds: provider.time)),
+                      style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
                     IconButton(
                       onPressed: () {
                         pc.previousPage(
                             duration: const Duration(milliseconds: 200),
                             curve: Curves.easeOut);
+                        page = pc.page!.toInt();
                       },
-                      icon: const Icon(Icons.arrow_back),
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
                       splashRadius: 25,
                     ),
                     IconButton(
@@ -55,8 +69,12 @@ class _PlayRoutineState extends State<PlayRoutine> {
                           duration: const Duration(milliseconds: 200),
                           curve: Curves.easeOut,
                         );
+                        page = pc.page!.toInt();
                       },
-                      icon: const Icon(Icons.arrow_forward),
+                      icon: const Icon(
+                        Icons.arrow_forward,
+                        color: Colors.white,
+                      ),
                       splashRadius: 25,
                     ),
                   ],
@@ -64,15 +82,18 @@ class _PlayRoutineState extends State<PlayRoutine> {
               ),
             ),
           ),
-          Flexible(
-            flex: 7,
-            child: PageView(
-                controller: pc,
-                physics: const NeverScrollableScrollPhysics(),
-                children: List.generate(
-                  widget.exercises.length,
-                  (index) => Recorder(exercise: widget.exercises[index]),
-                )),
+          Expanded(
+            flex: 12,
+            child: provider.timerActive
+                ? PageView(
+                    controller: pc,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: List.generate(
+                      widget.exercises.length,
+                      (index) => Recorder(exercise: widget.exercises[index]),
+                    ),
+                  )
+                : const Placeholder(),
           ),
         ],
       ),

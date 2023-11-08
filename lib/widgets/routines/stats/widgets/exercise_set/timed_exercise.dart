@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
+import 'package:gymmanager/db/resources/exercise_recording/setrecord.dart';
 import 'package:gymmanager/functions/displaytime.dart';
 import 'package:gymmanager/widgets/routines/time_setter.dart';
 
 class TimeExercise extends StatefulWidget {
   final int setNumber;
   final Exercise exercise;
-  const TimeExercise(
-      {super.key, required this.setNumber, required this.exercise});
+  final SetRecord record;
+  const TimeExercise({
+    super.key,
+    required this.setNumber,
+    required this.exercise,
+    required this.record,
+  });
 
   @override
   State<TimeExercise> createState() => _TimeExerciseState();
 }
 
 class _TimeExerciseState extends State<TimeExercise> {
-  int seconds = 0;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -37,7 +42,7 @@ class _TimeExerciseState extends State<TimeExercise> {
                   builder: (context) => TimeSetter(
                     setTime: (time) {
                       setState(() {
-                        seconds = time;
+                        widget.record.amount = time;
                       });
                     },
                   ),
@@ -46,7 +51,7 @@ class _TimeExerciseState extends State<TimeExercise> {
               child: Card(
                 color: Colors.transparent,
                 child: Text(
-                  displayTime(Duration(seconds: seconds)),
+                  displayTime(Duration(seconds: widget.record.amount)),
                   style: const TextStyle(fontSize: 20, letterSpacing: 1.5),
                 ),
               ),

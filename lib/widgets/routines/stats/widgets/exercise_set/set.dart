@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
-import 'package:gymmanager/widgets/routines/stats/exercise_set/repped_exercise.dart';
-import 'package:gymmanager/widgets/routines/stats/exercise_set/timed_exercise.dart';
+import 'package:gymmanager/db/resources/exercise_recording/setrecord.dart';
+import 'package:gymmanager/widgets/routines/stats/widgets/exercise_set/repped_exercise.dart';
+import 'package:gymmanager/widgets/routines/stats/widgets/exercise_set/timed_exercise.dart';
 
 class ExerciseSet extends StatefulWidget {
   final Exercise exercise;
   final int setNumber;
-  const ExerciseSet(
-      {super.key, required this.exercise, required this.setNumber});
+  final SetRecord record;
+  const ExerciseSet({
+    super.key,
+    required this.exercise,
+    required this.setNumber,
+    required this.record,
+  });
   @override
   State<ExerciseSet> createState() => _ExerciseSetState();
 }
@@ -20,11 +26,13 @@ class _ExerciseSetState extends State<ExerciseSet> {
       return RepsExercise(
         setNumber: widget.setNumber,
         exercise: widget.exercise,
+        record: widget.record,
       );
     } else {
       return TimeExercise(
         setNumber: widget.setNumber,
         exercise: widget.exercise,
+        record: widget.record,
       );
     }
   }
