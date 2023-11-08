@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/providers/routineplayprovider.dart';
 import 'package:gymmanager/widgets/pages/playroutine.dart';
+import 'package:gymmanager/widgets/pages/showroutine.dart';
 import 'package:provider/provider.dart';
 
 class RoutineWidget extends StatefulWidget {
@@ -116,7 +117,13 @@ class _RoutineWidgetState extends State<RoutineWidget> {
                 Tooltip(
                   message: "View Details",
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return ShowRoutine(routine: widget.exercises);
+                        },
+                      ));
+                    },
                     icon: const Icon(Icons.remove_red_eye),
                     splashRadius: 25,
                     splashColor: const Color.fromARGB(150, 155, 39, 176),
