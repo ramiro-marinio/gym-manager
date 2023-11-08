@@ -35,19 +35,21 @@ class _RepsExerciseState extends State<RepsExercise> {
             Row(
               children: [
                 Expanded(
-                  child: Slider(
-                    value: reps.toDouble(),
-                    max: widget.exercise.amount * 2,
-                    label: reps.toString(),
-                    divisions: widget.exercise.amount * 2 <= 60
-                        ? widget.exercise.amount * 2
-                        : null,
-                    onChanged: (value) {
-                      setState(() {
-                        reps = value.toInt();
-                      });
-                    },
-                  ),
+                  child: !widget.exercise.dropset
+                      ? Slider(
+                          value: reps.toDouble(),
+                          max: widget.exercise.amount * 2,
+                          label: reps.toString(),
+                          divisions: widget.exercise.amount * 2 <= 60
+                              ? widget.exercise.amount * 2
+                              : null,
+                          onChanged: (value) {
+                            setState(() {
+                              reps = value.toInt();
+                            });
+                          },
+                        )
+                      : const Placeholder(),
                 ),
                 Visibility(
                     maintainAnimation: true,

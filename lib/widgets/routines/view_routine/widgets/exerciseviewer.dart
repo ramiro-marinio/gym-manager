@@ -33,7 +33,9 @@ class ExerciseViewer extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  "${exercise.sets} set${exercise.sets > 1 ? "s" : ""} of ${exercise.exerciseType.repunit ? exercise.amount : displayTime(Duration(seconds: exercise.amount))}",
+                  !exercise.dropset
+                      ? "${exercise.sets} set${exercise.sets > 1 ? "s" : ""} of ${exercise.exerciseType.repunit ? exercise.amount : displayTime(Duration(seconds: exercise.amount))}"
+                      : "${exercise.sets} set${exercise.sets > 1 ? "s" : ""}. Dropsetted",
                   style: const TextStyle(
                     fontSize: 20,
                     fontStyle: FontStyle.italic,

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:gymmanager/functions/displaytime.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercisetype.dart';
-import 'package:gymmanager/widgets/blocks/minitextfield.dart';
-import 'package:gymmanager/widgets/blocks/time_setter.dart';
+import 'package:gymmanager/widgets/routine_creation/widgets/minitextfield.dart';
+import 'package:gymmanager/widgets/routines/time_setter.dart';
 
 class MiniExerciseWidget extends StatefulWidget {
   final Exercise exercise;
@@ -84,7 +84,7 @@ class _MiniExerciseWidgetState extends State<MiniExerciseWidget> {
               child: exerciseType.repunit
                   ? MiniTextField(
                       changeHandler: (value) {
-                        exercise.amount = int.parse(value);
+                        exercise.amount = int.tryParse(value) ?? 1;
                       },
                       enabled: !exercise.dropset,
                     )

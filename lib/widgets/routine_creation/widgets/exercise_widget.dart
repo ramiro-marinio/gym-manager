@@ -2,9 +2,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gymmanager/functions/displaytime.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
-import 'package:gymmanager/widgets/blocks/minitextfield.dart';
-import 'package:gymmanager/widgets/blocks/superset/miniexercisewidget.dart';
-import 'package:gymmanager/widgets/blocks/time_setter.dart';
+import 'package:gymmanager/widgets/routine_creation/widgets/minitextfield.dart';
+import 'package:gymmanager/widgets/routine_creation/widgets/superset/miniexercisewidget.dart';
+import 'package:gymmanager/widgets/routines/time_setter.dart';
 
 class ExerciseWidget extends StatefulWidget {
   final Exercise exercise;
@@ -75,7 +75,8 @@ class _ExerciseWidgetState extends State<ExerciseWidget> {
                             child: unit
                                 ? MiniTextField(
                                     changeHandler: (String value) {
-                                      exercise.amount = int.parse(value);
+                                      exercise.amount =
+                                          int.tryParse(value) ?? 1;
                                     },
                                     enabled: !exercise.dropset,
                                   )
@@ -126,7 +127,7 @@ class _ExerciseWidgetState extends State<ExerciseWidget> {
                           ),
                           MiniTextField(
                             changeHandler: (value) {
-                              exercise.sets = int.parse(value);
+                              exercise.sets = int.tryParse(value) ?? 1;
                             },
                           ),
                         ],

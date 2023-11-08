@@ -1,7 +1,7 @@
 import 'package:gymmanager/db/functions/generateexercises.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
-import 'package:gymmanager/widgets/blocks/exercise_widget.dart';
+import 'package:gymmanager/widgets/routine_creation/widgets/exercise_widget.dart';
 import 'package:sqflite/sqflite.dart';
 
 Future<List<ExerciseContainer>> generateSupersets(

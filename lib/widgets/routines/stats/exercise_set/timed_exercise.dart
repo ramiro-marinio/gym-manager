@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/functions/displaytime.dart';
-import 'package:gymmanager/widgets/blocks/time_setter.dart';
+import 'package:gymmanager/widgets/routines/time_setter.dart';
 
 class TimeExercise extends StatefulWidget {
   final int setNumber;

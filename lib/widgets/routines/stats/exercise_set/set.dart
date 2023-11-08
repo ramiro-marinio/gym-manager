@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
-import 'package:gymmanager/widgets/blocks/exercise_recording/exercise_set/repped_exercise.dart';
-import 'package:gymmanager/widgets/blocks/exercise_recording/exercise_set/timed_exercise.dart';
+import 'package:gymmanager/widgets/routines/stats/exercise_set/repped_exercise.dart';
+import 'package:gymmanager/widgets/routines/stats/exercise_set/timed_exercise.dart';
 
 class ExerciseSet extends StatefulWidget {
   final Exercise exercise;

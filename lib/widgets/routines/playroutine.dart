@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/providers/routineplayprovider.dart';
-import 'package:gymmanager/widgets/blocks/exercise_recording/recorder.dart';
+import 'package:gymmanager/widgets/routines/stats/recorder.dart';
 import 'package:gymmanager/widgets/infobutton.dart';
 import 'package:provider/provider.dart';
 

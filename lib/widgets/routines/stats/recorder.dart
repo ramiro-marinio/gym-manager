@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
-import 'package:gymmanager/widgets/blocks/exercise_recording/exercise_set/set.dart';
+import 'package:gymmanager/widgets/routines/stats/exercise_set/set.dart';
 
 class Recorder extends StatelessWidget {
   final Object exercise;

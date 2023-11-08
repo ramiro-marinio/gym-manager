@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
-import 'package:gymmanager/widgets/blocks/view_routine/exerciseviewer.dart';
-import 'package:gymmanager/widgets/blocks/view_routine/supersetviewer.dart';
+import 'package:gymmanager/widgets/routines/view_routine/widgets/exerciseviewer.dart';
+import 'package:gymmanager/widgets/routines/view_routine/supersetviewer.dart';
 
 class ShowRoutine extends StatefulWidget {
   final List<Object> routine;

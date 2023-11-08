@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
-import 'package:gymmanager/widgets/blocks/view_routine/exerciseviewer.dart';
+import 'package:gymmanager/widgets/routines/view_routine/widgets/exerciseviewer.dart';
 
 class SupersetViewer extends StatelessWidget {
   final ExerciseContainer superset;
@@ -14,12 +14,13 @@ class SupersetViewer extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            "Superset. ${superset.sets} set${superset.sets! > 1 ? "s" : ""}",
+            "Superset || ${superset.sets} set${superset.sets! > 1 ? "s" : ""}",
             style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 20,
-                fontStyle: FontStyle.italic),
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 20,
+              fontStyle: FontStyle.italic,
+            ),
           ),
         ),
         ...List.generate(

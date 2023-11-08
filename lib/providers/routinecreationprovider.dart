@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gymmanager/providers/dbprovider.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
-import 'package:gymmanager/widgets/blocks/exercise_widget.dart';
-import 'package:gymmanager/widgets/blocks/superset/superset.dart';
+import 'package:gymmanager/widgets/routine_creation/widgets/exercise_widget.dart';
+import 'package:gymmanager/widgets/routine_creation/widgets/superset/superset.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 

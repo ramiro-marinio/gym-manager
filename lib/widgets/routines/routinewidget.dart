@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/providers/routineplayprovider.dart';
-import 'package:gymmanager/widgets/pages/playroutine.dart';
-import 'package:gymmanager/widgets/pages/showroutine.dart';
+import 'package:gymmanager/widgets/routines/playroutine.dart';
+import 'package:gymmanager/widgets/routines/view_routine/widgets/showroutine.dart';
 import 'package:provider/provider.dart';
 
 class RoutineWidget extends StatefulWidget {

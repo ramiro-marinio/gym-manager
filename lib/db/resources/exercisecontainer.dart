@@ -1,6 +1,6 @@
 //ExerciseContainer can either be a routine or a superset.
 //Even though it is unintuitive, it's the best way to do it if you have to use sqlite.
-import 'package:gymmanager/widgets/blocks/exercise_widget.dart';
+import 'package:gymmanager/widgets/routine_creation/widgets/exercise_widget.dart';
 
 class ExerciseContainer {
   final int? id;

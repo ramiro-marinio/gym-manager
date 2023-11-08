@@ -5,9 +5,9 @@ import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/db/resources/exercisetype.dart';
 import 'package:gymmanager/providers/routinecreationprovider.dart';
-import 'package:gymmanager/widgets/blocks/add_menu.dart';
-import 'package:gymmanager/widgets/pages/forms/exercises/add_exercise.dart';
-import 'package:gymmanager/widgets/pages/no_exercises.dart';
+import 'package:gymmanager/widgets/routine_creation/widgets/add_menu.dart';
+import 'package:gymmanager/widgets/routine_creation/forms/exercises/add_exercise.dart';
+import 'package:gymmanager/widgets/routine_creation/widgets/no_exercises.dart';
 import 'package:provider/provider.dart';
 
 class CreateRoutine extends StatefulWidget {
