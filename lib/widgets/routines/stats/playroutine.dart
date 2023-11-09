@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
-import 'package:gymmanager/functions/displaytime.dart';
 import 'package:gymmanager/providers/routineplayprovider.dart';
 import 'package:gymmanager/widgets/routines/stats/recorder.dart';
 import 'package:gymmanager/widgets/infobutton.dart';
+import 'package:gymmanager/widgets/routines/stats/widgets/navigationbar.dart';
 import 'package:provider/provider.dart';
 
 class PlayRoutine extends StatefulWidget {
@@ -16,11 +16,11 @@ class PlayRoutine extends StatefulWidget {
 }
 
 class _PlayRoutineState extends State<PlayRoutine> {
-  int page = 0;
+  int counter = 0;
   final PageController pc = PageController(initialPage: 0, keepPage: true);
   @override
   Widget build(BuildContext context) {
-    RoutinePlayProvider provider = Provider.of<RoutinePlayProvider>(context);
+    RoutinePlayProvider provider = context.read<RoutinePlayProvider>();
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.routine.name!),
@@ -34,80 +34,54 @@ class _PlayRoutineState extends State<PlayRoutine> {
       ),
       body: Column(
         children: [
-          Expanded(
-            flex: 1,
-            child: Material(
-              color: const Color.fromARGB(255, 82, 89, 183),
-              child: SizedBox(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      displayTime(Duration(seconds: provider.time)),
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        pc.previousPage(
-                            duration: const Duration(milliseconds: 200),
-                            curve: Curves.easeOut);
-                        page = pc.page!.toInt();
-                      },
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
-                      ),
-                      splashRadius: 25,
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        pc.nextPage(
-                          duration: const Duration(milliseconds: 200),
-                          curve: Curves.easeOut,
-                        );
-                        page = pc.page!.toInt();
-                      },
-                      icon: const Icon(
-                        Icons.arrow_forward,
-                        color: Colors.white,
-                      ),
-                      splashRadius: 25,
-                    ),
-                  ],
-                ),
+          StatefulBuilder(
+            builder: (context, setState) => Expanded(
+              flex: 1,
+              child: NavBar(
+                previousPage: () {
+                  pc.previousPage(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeOut,
+                  );
+                },
+                nextPage: () {
+                  pc.nextPage(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeOut,
+                  );
+                },
               ),
             ),
           ),
           Expanded(
-            flex: 12,
-            child: provider.timerActive
-                ? PageView(
-                    controller: pc,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: List.generate(
-                      widget.exercises.length,
-                      (index) => Recorder(exercise: widget.exercises[index]),
-                    ),
-                  )
-                : const Placeholder(),
-          ),
+              flex: 12,
+              child: PageView(
+                controller: pc,
+                physics: const NeverScrollableScrollPhysics(),
+                children: List.generate(
+                  widget.exercises.length,
+                  (index) => Recorder(exercise: widget.exercises[index]),
+                ),
+              )),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (provider.subscription == null) {
-            provider.initializeTimer(0, widget.routine);
-          } else {
-            provider.toggleTimer();
-          }
+      floatingActionButton: StatefulBuilder(
+        builder: (context, setState) {
+          RoutinePlayProvider statefulProvider =
+              context.watch<RoutinePlayProvider>();
+          return FloatingActionButton(
+            onPressed: () {
+              if (provider.subscription == null) {
+                provider.initializeTimer(0, widget.routine);
+              } else {
+                provider.toggleTimer();
+              }
+            },
+            child: statefulProvider.timerActive
+                ? const Icon(Icons.pause)
+                : const Icon(Icons.play_arrow),
+          );
         },
-        child: provider.timerActive
-            ? const Icon(Icons.pause)
-            : const Icon(Icons.play_arrow),
       ),
     );
   }

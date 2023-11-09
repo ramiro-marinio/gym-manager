@@ -91,7 +91,6 @@ class _RoutineWidgetState extends State<RoutineWidget> {
                               TextButton(
                                   onPressed: () {
                                     Navigator.pop(context);
-                                    routinePlayProvider.stop();
                                     routinePlayProvider.init(widget.routine);
                                     Navigator.push(
                                       context,

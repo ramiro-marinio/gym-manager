@@ -8,12 +8,16 @@ class RoutinePlayProvider extends ChangeNotifier {
   int time = 0;
   int currentExercise = 0;
   ExerciseContainer? currentRoutine;
-  StreamSubscription<int>? subscription;
+  StreamSubscription<int>? _subscription;
+  StreamSubscription<int>? get subscription {
+    return _subscription;
+  }
+
   void toggleTimer() {
     if (timerActive) {
-      subscription?.pause();
+      _subscription?.pause();
     } else {
-      subscription?.resume();
+      _subscription?.resume();
     }
     timerActive = !timerActive;
     notifyListeners();
@@ -21,7 +25,7 @@ class RoutinePlayProvider extends ChangeNotifier {
 
   void initializeTimer(int startingPoint, ExerciseContainer routine) {
     currentRoutine = routine;
-    subscription = Stream<int>.periodic(
+    _subscription = Stream<int>.periodic(
       const Duration(seconds: 1),
       (count) {
         return count;
@@ -35,8 +39,8 @@ class RoutinePlayProvider extends ChangeNotifier {
   }
 
   void stop() {
-    subscription?.cancel();
-    subscription = null;
+    _subscription?.cancel();
+    _subscription = null;
     time = 0;
     timerActive = false;
     currentExercise = 0;
