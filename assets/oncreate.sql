@@ -24,8 +24,8 @@ CREATE TABLE Exercises (
     Dropset BOOLEAN DEFAULT 0,
     Supersetted BOOLEAN DEFAULT 0,
     Parent INTEGER NOT NULL,
-    FOREIGN KEY (ExerciseType) REFERENCES ExerciseTypes(Id) ON DELETE CASCADE,
-    FOREIGN KEY (Parent) REFERENCES ExerciseContainers(Id) ON DELETE CASCADE
+    FOREIGN KEY (ExerciseType) REFERENCES ExerciseTypes(Id) ON DELETE SET NULL,
+    FOREIGN KEY (Parent) REFERENCES ExerciseContainers(Id) ON DELETE SET NULL
 );
 CREATE TABLE SetRecords(
     Id INTEGER PRIMARY KEY,

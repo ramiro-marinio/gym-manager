@@ -33,7 +33,6 @@ class _RoutinesState extends State<Routines> {
       body: FutureBuilder(
         future: routines,
         builder: (context, snapshot) {
-          print("THE DATA IS ${snapshot.data}");
           if (snapshot.connectionState == ConnectionState.done) {
             return ListView(children: [
               const SizedBox(

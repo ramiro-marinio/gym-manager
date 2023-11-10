@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gymmanager/providers/dbprovider.dart';
 import 'package:gymmanager/widgets/infobutton.dart';
+import 'package:gymmanager/widgets/navdrawer.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -24,14 +25,15 @@ class _SqlPageState extends State<SqlPage> {
     scarySound.setVolume(100);
     scarySound.load();
     return Scaffold(
+      drawer: const NavDrawer(),
       appBar: AppBar(
         title: const Text("SQL Page"),
         actions: const [
           InfoButton(
               title: "WARNING!",
               text:
-                  "This page is only present for debug purposes. If you somehow managed to get access, DO NOT DO ANYTHING. It could permanently damage your data, such as your routines and statistics.",
-              icon: Icon(Icons.dangerous))
+                  "This page is only present for debugging purposes. If you somehow managed to get access, DO NOT DO ANYTHING. It could permanently damage your data, such as your routines and statistics.",
+              icon: Icon(Icons.warning))
         ],
       ),
       body: Column(
@@ -84,7 +86,8 @@ class _SqlPageState extends State<SqlPage> {
                     context: context,
                     builder: (context) => AlertDialog(
                       title: const Text("Success"),
-                      content: Text(list.toString()),
+                      content:
+                          SingleChildScrollView(child: Text(list.toString())),
                     ),
                   );
                 }
@@ -95,7 +98,8 @@ class _SqlPageState extends State<SqlPage> {
                     builder: (ctx) {
                       return AlertDialog(
                         title: const Text("Error"),
-                        content: Text(e.toString()),
+                        content:
+                            SingleChildScrollView(child: Text(e.toString())),
                       );
                     },
                   );

@@ -17,7 +17,7 @@ class DbProvider extends ChangeNotifier {
     String dbpath = '${await dbdir}gymmanager.db';
     return await openDatabase(
       dbpath,
-      version: 1,
+      version: 5,
       onCreate: (db, version) async {
         String sql = await rootBundle.loadString("assets/oncreate.sql");
         List<String> statements = sql.split(';');
@@ -27,18 +27,22 @@ class DbProvider extends ChangeNotifier {
           }
         }
       },
+      onOpen: (db) async {
+        //This is necessary for foreign keys to work
+        await db.execute("PRAGMA foreign_keys = ON;");
+      },
     );
   }
 
   //EXERCISES SECTION
-  List<ExerciseType>? _exercises;
+  List<ExerciseType>? _exerciseTypes;
   Future<void> init() async {
     Database db = await database;
     List<Map<String, dynamic>> data =
         await db.query('ExerciseTypes', orderBy: "Name ASC");
-    _exercises = [];
+    _exerciseTypes = [];
     for (Map exercise in data) {
-      _exercises!.add(
+      _exerciseTypes!.add(
         ExerciseType(
           id: exercise['Id'],
           name: exercise['Name'],
@@ -51,11 +55,11 @@ class DbProvider extends ChangeNotifier {
   }
 
   List<ExerciseType> get exercises {
-    if (_exercises == null) {
+    if (_exerciseTypes == null) {
       init();
       return [];
     }
-    return _exercises!;
+    return _exerciseTypes!;
   }
 
   Future<void> createExercise(ExerciseType exercise) async {
@@ -81,13 +85,14 @@ class DbProvider extends ChangeNotifier {
   Future<void> deleteExercise(int id) async {
     Database db = await database;
     db.delete('ExerciseTypes', where: 'Id=$id');
-    for (var i = 0; i < _exercises!.length; i++) {
-      if (_exercises![i].id == id) {
-        _exercises!.removeAt(i);
+    for (var i = 0; i < _exerciseTypes!.length; i++) {
+      if (_exerciseTypes![i].id == id) {
+        _exerciseTypes!.removeAt(i);
         notifyListeners();
         break;
       }
     }
+    db.delete('Exercises', where: 'ExerciseType=$id');
   }
 
   //END OF EXERCISES SECTION
@@ -97,6 +102,12 @@ class DbProvider extends ChangeNotifier {
     int id = await db.insert('ExerciseContainers', routine.toJson());
     notifyListeners();
     return id;
+  }
+
+  Future<void> deleteExerciseContainer(int id) async {
+    Database db = await database;
+    db.delete("ExerciseContainers", where: "Id=$id");
+    db.delete("Exercises", where: "Parent=$id");
   }
 
   Future<int> createSuperset(ExerciseContainer superset) async {
