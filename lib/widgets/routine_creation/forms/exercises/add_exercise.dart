@@ -157,7 +157,7 @@ class _AddExerciseState extends State<AddExercise> {
               ),
               const Text("Go to the Exercises Manager section to create one."),
               ElevatedButton(
-                  onPressed: () => context.push('/exercises'),
+                  onPressed: () => context.go("/exercises"),
                   child: const Text("GO")),
             ],
           ),

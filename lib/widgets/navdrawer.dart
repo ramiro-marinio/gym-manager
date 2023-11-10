@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -40,7 +41,20 @@ class NavDrawer extends StatelessWidget {
               onTap: () {
                 context.go('/exercises');
               },
-            )
+            ),
+            Visibility(
+              visible: kDebugMode,
+              child: ListTile(
+                title: const Text("Sql (DEVELOPER ONLY)"),
+                leading: const Icon(
+                  Icons.engineering,
+                  color: Colors.black,
+                ),
+                onTap: () {
+                  context.go('/sql_settings');
+                },
+              ),
+            ),
           ],
         ),
       ),

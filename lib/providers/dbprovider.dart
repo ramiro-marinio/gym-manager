@@ -27,9 +27,6 @@ class DbProvider extends ChangeNotifier {
           }
         }
       },
-      // onOpen: (db) {
-      //   deleteDatabase(dbpath);
-      // },
     );
   }
 

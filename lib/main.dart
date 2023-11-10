@@ -6,6 +6,7 @@ import 'package:gymmanager/providers/routineplayprovider.dart';
 import 'package:gymmanager/widgets/pages/exercisemanager.dart';
 import 'package:gymmanager/widgets/pages/homescreen.dart';
 import 'package:gymmanager/widgets/pages/routines.dart';
+import 'package:gymmanager/widgets/pages/sql_page.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -21,6 +22,10 @@ void main() {
     GoRoute(
       path: '/exercises',
       builder: (context, state) => const ExerciseManager(),
+    ),
+    GoRoute(
+      path: '/sql_settings',
+      builder: (context, state) => const SqlPage(),
     )
   ]);
   runApp(MultiProvider(
