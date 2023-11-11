@@ -106,8 +106,9 @@ class DbProvider extends ChangeNotifier {
 
   Future<void> deleteExerciseContainer(int id) async {
     Database db = await database;
-    db.delete("ExerciseContainers", where: "Id=$id");
+    db.delete("ExerciseContainers", where: "Id=$id OR Parent=$id");
     db.delete("Exercises", where: "Parent=$id");
+    notifyListeners();
   }
 
   Future<int> createSuperset(ExerciseContainer superset) async {
@@ -121,7 +122,12 @@ class DbProvider extends ChangeNotifier {
     int id = await db.insert('Exercises', exercise.toJson());
     return id;
   }
-  //END OF ROUTINE SECTION
+
+  Future<void> deleteRoutineExercise(int id) async {
+    Database db = await database;
+    db.delete("Exercises", where: "Id=$id");
+    db.delete("SetRecords", where: "ExerciseId=$id");
+  }
 
   Future<List<Map<String, Object>>> getRoutines() async {
     Database db = await database;
@@ -143,4 +149,5 @@ class DbProvider extends ChangeNotifier {
     }
     return result;
   }
+  //END OF ROUTINE SECTION
 }

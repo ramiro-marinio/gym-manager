@@ -5,14 +5,16 @@ import 'package:gymmanager/functions/displaytime.dart';
 import 'package:gymmanager/widgets/routines/time_setter.dart';
 
 class TimeExercise extends StatefulWidget {
-  final int setNumber;
+  final String label;
   final Exercise exercise;
   final SetRecord record;
+  final bool mini;
   const TimeExercise({
     super.key,
-    required this.setNumber,
+    required this.label,
     required this.exercise,
     required this.record,
+    required this.mini,
   });
 
   @override
@@ -22,41 +24,46 @@ class TimeExercise extends StatefulWidget {
 class _TimeExerciseState extends State<TimeExercise> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: Card(
-        child: Column(
-          children: [
-            Text(
-              "Set ${widget.setNumber}",
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-            ),
-            Text(
-              "Expected time:${displayTime(Duration(seconds: widget.exercise.amount))}",
-              style: const TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
-            ),
-            InkWell(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => TimeSetter(
-                    setTime: (time) {
-                      setState(() {
-                        widget.record.amount = time;
-                      });
-                    },
-                  ),
-                );
-              },
-              child: Card(
-                color: Colors.transparent,
-                child: Text(
-                  displayTime(Duration(seconds: widget.record.amount)),
-                  style: const TextStyle(fontSize: 20, letterSpacing: 1.5),
-                ),
+    return Padding(
+      padding: EdgeInsets.all(widget.mini ? 12.0 : 0.0),
+      child: SizedBox(
+        width: double.infinity,
+        child: Card(
+          child: Column(
+            children: [
+              Text(
+                widget.label,
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
               ),
-            )
-          ],
+              Text(
+                "Expected time:${displayTime(Duration(seconds: widget.exercise.amount))}",
+                style:
+                    const TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
+              ),
+              InkWell(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => TimeSetter(
+                      setTime: (time) {
+                        setState(() {
+                          widget.record.amount = time;
+                        });
+                      },
+                    ),
+                  );
+                },
+                child: Card(
+                  color: Colors.transparent,
+                  child: Text(
+                    displayTime(Duration(seconds: widget.record.amount)),
+                    style: const TextStyle(fontSize: 20, letterSpacing: 1.5),
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

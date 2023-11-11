@@ -24,8 +24,8 @@ class Exercise {
         ? {
             'Id': id,
             'ExerciseType': exerciseType.id,
-            'Amount': amount,
-            'Sets': sets,
+            'Amount': amount != 0 ? amount : (exerciseType.repunit ? 12 : 300),
+            'Sets': sets != 0 ? sets : (exerciseType.repunit ? 4 : 1),
             'RoutineOrder': routineOrder,
             'Dropset': dropset ? 1 : 0,
             'Supersetted': supersetted ? 1 : 0,
@@ -33,8 +33,8 @@ class Exercise {
           }
         : {
             'ExerciseType': exerciseType.id,
-            'Amount': amount,
-            'Sets': sets,
+            'Amount': amount != 0 ? amount : (exerciseType.repunit ? 12 : 300),
+            'Sets': sets != 0 ? sets : (exerciseType.repunit ? 4 : 1),
             'RoutineOrder': routineOrder,
             'Dropset': dropset ? 1 : 0,
             'Supersetted': supersetted ? 1 : 0,

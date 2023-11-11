@@ -8,7 +8,7 @@ class NavDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Container(
+      child: Material(
         color: const Color.fromARGB(255, 128, 187, 255),
         child: ListView(
           children: [

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
+import 'package:gymmanager/widgets/routines/stats/recorder.dart';
 
 class RoutinePlayProvider extends ChangeNotifier {
   bool timerActive = false;
@@ -13,6 +14,7 @@ class RoutinePlayProvider extends ChangeNotifier {
     return _subscription;
   }
 
+  List<Recorder> recorderPages = [];
   void toggleTimer() {
     if (timerActive) {
       _subscription?.pause();
@@ -47,11 +49,13 @@ class RoutinePlayProvider extends ChangeNotifier {
     currentRoutine = null;
   }
 
-  void init(ExerciseContainer routine) {
+  void start(ExerciseContainer? routine) {
     currentRoutine = routine;
     currentExercise = 0;
     time = 0;
     timerActive = false;
     notifyListeners();
   }
+
+  void endRoutine() {}
 }

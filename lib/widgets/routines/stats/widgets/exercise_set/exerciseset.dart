@@ -6,13 +6,15 @@ import 'package:gymmanager/widgets/routines/stats/widgets/exercise_set/timed_exe
 
 class ExerciseSet extends StatefulWidget {
   final Exercise exercise;
-  final int setNumber;
+  final String label;
   final SetRecord record;
+  final bool mini;
   const ExerciseSet({
     super.key,
     required this.exercise,
-    required this.setNumber,
+    required this.label,
     required this.record,
+    required this.mini,
   });
   @override
   State<ExerciseSet> createState() => _ExerciseSetState();
@@ -24,15 +26,17 @@ class _ExerciseSetState extends State<ExerciseSet> {
   Widget build(BuildContext context) {
     if (widget.exercise.exerciseType.repunit) {
       return RepsExercise(
-        setNumber: widget.setNumber,
+        label: widget.label,
         exercise: widget.exercise,
         record: widget.record,
+        mini: widget.mini,
       );
     } else {
       return TimeExercise(
-        setNumber: widget.setNumber,
+        label: widget.label,
         exercise: widget.exercise,
         record: widget.record,
+        mini: widget.mini,
       );
     }
   }

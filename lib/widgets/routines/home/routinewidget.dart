@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
+import 'package:gymmanager/providers/dbprovider.dart';
 import 'package:gymmanager/providers/routineplayprovider.dart';
 import 'package:gymmanager/widgets/routines/stats/playroutine.dart';
 import 'package:gymmanager/widgets/routines/view_routine/widgets/showroutine.dart';
@@ -23,6 +24,7 @@ class _RoutineWidgetState extends State<RoutineWidget> {
   Widget build(BuildContext context) {
     RoutinePlayProvider routinePlayProvider =
         context.watch<RoutinePlayProvider>();
+    DbProvider dbProvider = context.read<DbProvider>();
     return Padding(
       padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
       child: Card(
@@ -65,7 +67,7 @@ class _RoutineWidgetState extends State<RoutineWidget> {
                       routinePlayProvider.currentRoutine ??= widget.routine;
                       if (routinePlayProvider.currentRoutine!.id ==
                           widget.routine.id) {
-                        routinePlayProvider.init(widget.routine);
+                        routinePlayProvider.start(widget.routine);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -84,25 +86,27 @@ class _RoutineWidgetState extends State<RoutineWidget> {
                                 "You are already doing a different routine. If you start this one, your current routine will be aborted and the data will not be saved. Are you sure you want to proceed?"),
                             actions: [
                               TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text("NO")),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("NO"),
+                              ),
                               TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    routinePlayProvider.init(widget.routine);
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => PlayRoutine(
-                                          routine: widget.routine,
-                                          exercises: widget.exercises,
-                                        ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  routinePlayProvider.start(widget.routine);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PlayRoutine(
+                                        routine: widget.routine,
+                                        exercises: widget.exercises,
                                       ),
-                                    );
-                                  },
-                                  child: const Text("YES"))
+                                    ),
+                                  );
+                                },
+                                child: const Text("YES"),
+                              )
                             ],
                           ),
                         );
@@ -116,7 +120,38 @@ class _RoutineWidgetState extends State<RoutineWidget> {
                 Tooltip(
                   message: "Delete Routine",
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text("Delete Routine?"),
+                            content: const Text("It will be permanently lost!"),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text("NO"),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  if (widget.routine.id ==
+                                      routinePlayProvider.currentRoutine?.id) {
+                                    routinePlayProvider.start(null);
+                                  }
+                                  dbProvider.deleteExerciseContainer(
+                                    widget.routine.id!,
+                                  );
+                                  if (context.mounted) {
+                                    Navigator.pop(context);
+                                  }
+                                },
+                                child: const Text("YES"),
+                              )
+                            ],
+                          );
+                        },
+                      );
+                    },
                     icon: const Icon(Icons.delete),
                     splashRadius: 25,
                     splashColor: const Color.fromARGB(150, 244, 67, 54),

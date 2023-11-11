@@ -34,7 +34,7 @@ class ExerciseContainer {
             'CreationDate': creationDate,
             'RoutineOrder': routineOrder,
             'Parent': parent,
-            'Sets': sets,
+            'Sets': sets != 0 ? sets : 3,
           }
         : {
             'Name': name,
@@ -43,7 +43,7 @@ class ExerciseContainer {
             'CreationDate': creationDate,
             'RoutineOrder': routineOrder,
             'Parent': parent,
-            'Sets': sets,
+            'Sets': sets != 0 ? sets : 3,
           };
   }
 }
