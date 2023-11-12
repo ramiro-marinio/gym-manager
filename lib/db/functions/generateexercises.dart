@@ -10,6 +10,7 @@ Future<List<Exercise>> generateExercises(
     Map<String, Object?> exerciseTypeMap = (await db.query("ExerciseTypes",
         where: "Id=${map["ExerciseType"]}"))[0];
     ExerciseType exerciseType = ExerciseType(
+      id: exerciseTypeMap["Id"] as int,
       name: exerciseTypeMap["Name"] as String,
       description: exerciseTypeMap["Description"] as String,
       repunit: exerciseTypeMap["RepUnit"] as int == 1,

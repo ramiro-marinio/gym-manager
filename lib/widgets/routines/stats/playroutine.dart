@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
+import 'package:gymmanager/providers/dbprovider.dart';
 import 'package:gymmanager/providers/routineplayprovider.dart';
-import 'package:gymmanager/widgets/routines/stats/generatesets.dart';
+import 'package:gymmanager/widgets/routines/stats/functions/generatesets.dart';
 import 'package:gymmanager/widgets/routines/stats/recorder.dart';
 import 'package:gymmanager/widgets/infobutton.dart';
 import 'package:gymmanager/widgets/routines/stats/widgets/navigationbar.dart';
@@ -23,6 +24,8 @@ class _PlayRoutineState extends State<PlayRoutine> {
   Widget build(BuildContext context) {
     RoutinePlayProvider routinePlayProvider =
         context.watch<RoutinePlayProvider>();
+    //recorderPages is what is displaye in the entire page: the widgets that record statistics. I placed them in the provider
+    //so that I could avoid them being deleted every reload and losing their data every time.
     if (routinePlayProvider.recorderPages.isEmpty) {
       routinePlayProvider.recorderPages = List.generate(
         widget.exercises.length,
@@ -83,7 +86,31 @@ class _PlayRoutineState extends State<PlayRoutine> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          routinePlayProvider.endRoutine();
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text("End Routine?"),
+              content: const Text("Make sure you inserted the correct data"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("NO"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    routinePlayProvider.endRoutine(
+                      dbProvider: context.read<DbProvider>(),
+                      context: context,
+                    );
+                  },
+                  child: const Text("YES"),
+                ),
+              ],
+            ),
+          );
         },
         child: const Icon(Icons.check),
       ),

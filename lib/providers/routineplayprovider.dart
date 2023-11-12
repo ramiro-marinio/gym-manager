@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
+import 'package:gymmanager/providers/dbprovider.dart';
 import 'package:gymmanager/widgets/routines/stats/recorder.dart';
+import 'package:intl/intl.dart';
 
 class RoutinePlayProvider extends ChangeNotifier {
   bool timerActive = false;
@@ -32,8 +34,8 @@ class RoutinePlayProvider extends ChangeNotifier {
       (count) {
         return count;
       },
-    ).listen((event) {
-      time = event;
+    ).listen((seconds) {
+      time = seconds + 1;
       notifyListeners();
     });
     timerActive = true;
@@ -57,10 +59,33 @@ class RoutinePlayProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void endRoutine() {
+  void endRoutine(
+      {required DbProvider dbProvider, required BuildContext context}) {
+    dbProvider.createRoutineRecord({
+      'RoutineId': currentRoutine!.id,
+      'RoutineTime': time,
+      'Moment': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+    });
     for (var i = 0; i < recorderPages.length; i++) {
-      print("THIS IS PAGE $i LENGTH");
-      print(recorderPages[i].getRecords().length);
+      dbProvider.createSetRecords(recorderPages[i].getRecords());
     }
+    stop();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Row(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5),
+              child: Icon(
+                Icons.check,
+                color: Colors.white,
+              ),
+            ),
+            Text("Routine Complete!"),
+          ],
+        ),
+      ),
+    );
+    Navigator.pop(context);
   }
 }

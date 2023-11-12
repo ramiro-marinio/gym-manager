@@ -3,6 +3,7 @@ import 'package:gymmanager/db/functions/generateexercises.dart';
 import 'package:gymmanager/db/functions/generateroutine.dart';
 import 'package:gymmanager/db/functions/generatesupersets.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
+import 'package:gymmanager/db/resources/exercise_recording/setrecord.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/db/resources/exercisetype.dart';
 import 'package:sqflite/sqflite.dart';
@@ -150,4 +151,18 @@ class DbProvider extends ChangeNotifier {
     return result;
   }
   //END OF ROUTINE SECTION
+
+  //START OF STATISTICS SECTION
+  void createSetRecords(List<SetRecord> setRecords) async {
+    Database db = await database;
+    for (SetRecord record in setRecords) {
+      db.insert('SetRecords', record.toJson());
+    }
+  }
+
+  void createRoutineRecord(Map<String, dynamic> map) async {
+    Database db = await database;
+    db.insert('RoutineRecords', map);
+  }
+  //END OF STATISTICS SECTION
 }

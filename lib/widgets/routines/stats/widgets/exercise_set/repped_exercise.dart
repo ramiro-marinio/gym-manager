@@ -78,6 +78,15 @@ class _RepsExerciseState extends State<RepsExercise> {
                                   FilteringTextInputFormatter.digitsOnly,
                                   LengthLimitingTextInputFormatter(4),
                                 ],
+                                controller: TextEditingController(
+                                  text: widget.record.amount != 0
+                                      ? widget.record.amount.toString()
+                                      : null,
+                                ),
+                                onChanged: (value) {
+                                  widget.record.amount =
+                                      int.tryParse(value) ?? 0;
+                                },
                               ),
                             ),
                           ),
@@ -103,6 +112,11 @@ class _RepsExerciseState extends State<RepsExercise> {
                 child: SizedBox(
                   height: 30,
                   child: TextField(
+                    controller: TextEditingController(
+                      text: widget.record.weight == 0
+                          ? null
+                          : widget.record.weight.toString(),
+                    ),
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       hintText: "Weight (kg)",
@@ -113,6 +127,9 @@ class _RepsExerciseState extends State<RepsExercise> {
                       FilteringTextInputFormatter.digitsOnly,
                       LengthLimitingTextInputFormatter(4),
                     ],
+                    onChanged: (value) {
+                      widget.record.weight = int.tryParse(value) ?? 0;
+                    },
                   ),
                 ),
               ),
