@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercise_recording/setrecord.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/widgets/routines/stats/widgets/exercise_set/exerciseset.dart';
@@ -7,7 +6,20 @@ import 'package:gymmanager/widgets/routines/stats/widgets/exercise_set/exercises
 class SupersetSet extends StatefulWidget {
   final ExerciseContainer superset;
   final String label;
-  const SupersetSet({super.key, required this.superset, required this.label});
+  final List<ExerciseSet> supersetRecorderWdidgets;
+  const SupersetSet({
+    super.key,
+    required this.superset,
+    required this.label,
+    required this.supersetRecorderWdidgets,
+  });
+  //This function retrieves the record objects in the superset so that the "bigger" getRecords can get all records.
+  List<SetRecord> getRecords() {
+    return List.generate(
+      supersetRecorderWdidgets.length,
+      (index) => supersetRecorderWdidgets[index].record,
+    );
+  }
 
   @override
   State<SupersetSet> createState() => _SupersetSetState();
@@ -34,22 +46,7 @@ class _SupersetSetState extends State<SupersetSet> {
                 ),
               ),
             ),
-            ...List.generate(
-              widget.superset.children!.length,
-              (index) {
-                Exercise e = widget.superset.children![index].exercise;
-                return ExerciseSet(
-                  exercise: e,
-                  label: "Exercise ${index + 1}: ${e.exerciseType.name}",
-                  record: SetRecord(
-                    exerciseType: e.exerciseType,
-                    amount: 0,
-                    weight: 0,
-                  ),
-                  mini: true,
-                );
-              },
-            ),
+            ...widget.supersetRecorderWdidgets,
           ]),
         ),
       ),

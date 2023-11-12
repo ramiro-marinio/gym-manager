@@ -26,6 +26,22 @@ List<Widget> generateSets(Object object) {
       return SupersetSet(
         superset: object as ExerciseContainer,
         label: "Set ${index + 1}",
+        supersetRecorderWdidgets: List.generate(
+          object.children!.length,
+          (index) {
+            Exercise e = object.children![index].exercise;
+            return ExerciseSet(
+              exercise: e,
+              label: "Exercise ${index + 1}: ${e.exerciseType.name}",
+              record: SetRecord(
+                exerciseType: e.exerciseType,
+                amount: 0,
+                weight: 0,
+              ),
+              mini: true,
+            );
+          },
+        ),
       );
     },
   );

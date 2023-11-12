@@ -57,5 +57,10 @@ class RoutinePlayProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void endRoutine() {}
+  void endRoutine() {
+    for (var i = 0; i < recorderPages.length; i++) {
+      print("THIS IS PAGE $i LENGTH");
+      print(recorderPages[i].getRecords().length);
+    }
+  }
 }

@@ -81,6 +81,12 @@ class _PlayRoutineState extends State<PlayRoutine> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          routinePlayProvider.endRoutine();
+        },
+        child: const Icon(Icons.check),
+      ),
     );
   }
 }
