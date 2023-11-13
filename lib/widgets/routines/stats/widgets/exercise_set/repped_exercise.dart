@@ -42,20 +42,23 @@ class _RepsExerciseState extends State<RepsExercise> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            StatsView(exercise: widget.exercise),
-                          ],
-                        ),
-                      );
-                    },
-                    icon: Icon(Icons.query_stats),
-                    splashRadius: 15,
+                  Visibility(
+                    visible: widget.mini,
+                    child: IconButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              StatsView(exercise: widget.exercise),
+                            ],
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.query_stats),
+                      splashRadius: 15,
+                    ),
                   )
                 ],
               ),

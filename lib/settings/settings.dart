@@ -1,6 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings {
+  bool kgUnit = true;
   Future<bool> getUnit() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     bool? val = prefs.getBool('kgUnit');
@@ -8,7 +9,8 @@ class Settings {
       prefs.setBool('kgUnit', true);
       return true;
     }
-    return prefs.getBool('kgUnit')!;
+    kgUnit = prefs.getBool('kgUnit')!;
+    return kgUnit;
   }
 
   void setUnit(bool unit) async {

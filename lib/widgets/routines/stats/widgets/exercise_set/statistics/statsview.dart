@@ -25,15 +25,47 @@ class _StatsViewState extends State<StatsView> {
   Widget build(BuildContext context) {
     DbProvider dbProvider = context.read<DbProvider>();
     ExerciseType exerciseType = widget.exercise.exerciseType;
-    Future<Map<String, dynamic>> stats =
+    Future<Map<String, dynamic>?> stats =
         dbProvider.getStatisticsOf(exerciseType);
     return StatefulBuilder(builder: (context, setState) {
       return Visibility(
         visible: widget.exercise.exerciseType.repunit,
-        child: FutureBuilder<Map<String, dynamic>>(
+        child: FutureBuilder<Map<String, dynamic>?>(
           future: stats,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.data == null) {
+                return const Card(
+                  color: Color.fromARGB(255, 130, 0, 0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 125,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: AutoSizeText(
+                                "Statistics: Not enough statistics!",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.w900),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          "They will show up after this exercise is done at least once.",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
               bool kgUnit = snapshot.data!['kgUnit'];
               List<SetRecord> lastWeights = snapshot.data!['lastWeights'];
 
@@ -78,13 +110,7 @@ class _StatsViewState extends State<StatsView> {
                 ),
               );
             } else {
-              return const Card(
-                  color: Color.fromARGB(255, 100, 130, 0),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 125,
-                    child: CircularProgressIndicator.adaptive(),
-                  ));
+              return const CircularProgressIndicator.adaptive();
             }
           },
         ),

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gymmanager/providers/dbprovider.dart';
 import 'package:gymmanager/widgets/infobutton.dart';
-import 'package:gymmanager/widgets/navdrawer.dart';
+import 'package:gymmanager/widgets/pages/navdrawer.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';

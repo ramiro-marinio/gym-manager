@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gymmanager/widgets/navdrawer.dart';
+import 'package:gymmanager/widgets/pages/navdrawer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

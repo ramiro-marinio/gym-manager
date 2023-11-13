@@ -44,7 +44,7 @@ class _PlayRoutineState extends State<PlayRoutine> {
           InfoButton(
               title: "Routine Player",
               text:
-                  "In this section of the app, you can run your routine, save your progress in the statistics section, and look at it later. You can also time your routines!",
+                  "This section of the app allows you to time your routines and see your last weight, so that when you do them, you do not have to remember what weight you used. It also guides you through the routine, so you don't need to remember the order.",
               icon: Icon(Icons.help))
         ],
       ),
@@ -90,7 +90,7 @@ class _PlayRoutineState extends State<PlayRoutine> {
             context: context,
             builder: (context) => AlertDialog(
               title: const Text("End Routine?"),
-              content: const Text("Make sure you inserted the correct data"),
+              content: const Text("Make sure you inserted the correct data!"),
               actions: [
                 TextButton(
                   onPressed: () {

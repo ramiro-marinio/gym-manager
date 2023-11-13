@@ -42,6 +42,16 @@ class NavDrawer extends StatelessWidget {
                 context.go('/exercises');
               },
             ),
+            ListTile(
+              title: const Text("Settings"),
+              leading: const Icon(
+                Icons.settings,
+                color: Colors.black,
+              ),
+              onTap: () {
+                context.go('/user_settings');
+              },
+            ),
             Visibility(
               visible: kDebugMode,
               child: ListTile(

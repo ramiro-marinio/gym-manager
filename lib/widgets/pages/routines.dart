@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymmanager/providers/dbprovider.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/widgets/routines/home/routinewidget.dart';
-import 'package:gymmanager/widgets/navdrawer.dart';
+import 'package:gymmanager/widgets/pages/navdrawer.dart';
 import 'package:gymmanager/widgets/routine_creation/forms/create_routine.dart';
 import 'package:provider/provider.dart';
 

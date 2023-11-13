@@ -152,8 +152,8 @@ class DbProvider extends ChangeNotifier {
     }
     return result;
   }
-  //END OF ROUTINE SECTION
 
+  //END OF ROUTINE SECTION
   //START OF STATISTICS SECTION
   void createSetRecords(List<SetRecord> setRecords) async {
     Database db = await database;
@@ -200,17 +200,21 @@ class DbProvider extends ChangeNotifier {
     });
   }
 
-  Future<Map<String, dynamic>> getStatisticsOf(
+  Future<Map<String, dynamic>?> getStatisticsOf(
       ExerciseType exerciseType) async {
     List<SetRecord> lastWeights = (await getLastRecords(exerciseType, 12));
-    return {
-      'highestWeight':
-          (await getRecordByWeight(exerciseType, true)).amount.toDouble(),
-      'lowestWeight':
-          (await getRecordByWeight(exerciseType, false)).amount.toDouble(),
-      'lastWeights': lastWeights,
-      'kgUnit': await Settings().getUnit(),
-    };
+    try {
+      return {
+        'highestWeight':
+            (await getRecordByWeight(exerciseType, true)).amount.toDouble(),
+        'lowestWeight':
+            (await getRecordByWeight(exerciseType, false)).amount.toDouble(),
+        'lastWeights': lastWeights,
+        'kgUnit': await Settings().getUnit(),
+      };
+    } on Exception catch (_) {
+      return null;
+    }
   }
   //END OF STATISTICS SECTION
 }

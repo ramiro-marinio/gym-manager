@@ -51,6 +51,7 @@ class RoutinePlayProvider extends ChangeNotifier {
     currentExercise = 0;
     currentRoutine = null;
     recorderPages.clear();
+    notifyListeners();
   }
 
   void start(ExerciseContainer? routine) {
