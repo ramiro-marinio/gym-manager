@@ -88,7 +88,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: const Text("WARNING"),
+                      title: const Text("WARNING!"),
                       content: const Text(
                           "This will permanently delete all of your exercises, routines and statistics. You should only do this because of a critical reason, such as your database being corrupted. Proceed?"),
                       actions: [

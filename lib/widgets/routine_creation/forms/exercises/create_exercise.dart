@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercisetype.dart';
 import 'package:gymmanager/providers/dbprovider.dart';
+import 'package:gymmanager/widgets/infobutton.dart';
 import 'package:provider/provider.dart';
 
 class CreateExercise extends StatefulWidget {
@@ -74,6 +75,11 @@ class _CreateExerciseState extends State<CreateExercise> {
                     color: Colors.transparent,
                     child: Row(
                       children: [
+                        const InfoButton(
+                            title: 'Warning',
+                            text:
+                                'This field cannot be changed after creating the exercise. Choose it carefully.',
+                            icon: Icon(Icons.warning)),
                         const Icon(Icons.timer),
                         Padding(
                           padding: const EdgeInsets.only(top: 8),
@@ -81,11 +87,13 @@ class _CreateExerciseState extends State<CreateExercise> {
                             scale: 1.3,
                             child: Switch(
                               value: repunit!,
-                              onChanged: (value) {
-                                setState(() {
-                                  repunit = !repunit!;
-                                });
-                              },
+                              onChanged: !widget.modifyMode
+                                  ? (value) {
+                                      setState(() {
+                                        repunit = !repunit!;
+                                      });
+                                    }
+                                  : null,
                             ),
                           ),
                         ),

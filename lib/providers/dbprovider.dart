@@ -7,6 +7,7 @@ import 'package:gymmanager/db/resources/exercise_recording/setrecord.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/db/resources/exercisetype.dart';
 import 'package:gymmanager/settings/settings.dart';
+import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -26,6 +27,40 @@ class DbProvider extends ChangeNotifier {
         for (String statement in statements) {
           if (statement.trim().isNotEmpty) {
             await db.execute(statement);
+          }
+          List<ExerciseType> defaultExercises = [
+            ExerciseType(name: "Bicep Curls", description: "", repunit: true),
+            ExerciseType(
+                name: "Tricep Extension", description: "", repunit: true),
+            ExerciseType(name: "Squats", description: "", repunit: true),
+            ExerciseType(name: "Deadlift", description: "", repunit: true),
+            ExerciseType(name: "Bench Press", description: "", repunit: true),
+            ExerciseType(name: "Bicycle", description: "", repunit: false),
+            ExerciseType(name: "Treadmill", description: "", repunit: true),
+          ];
+          for (ExerciseType exerciseType in defaultExercises) {
+            createExercise(exerciseType);
+          }
+          int routineId = await createRoutine(ExerciseContainer(
+            isRoutine: true,
+            name: "Demo Routine",
+            creationDate: DateFormat("yyyy-MM-dd").format(DateTime.now()),
+            description: "Demonstration Routine",
+          ));
+          int index = 0;
+          for (ExerciseType exerciseType in defaultExercises) {
+            createRoutineExercise(
+              Exercise(
+                exerciseType: exerciseType,
+                amount: exerciseType.repunit ? 12 : 300,
+                sets: exerciseType.repunit ? 4 : 1,
+                dropset: false,
+                supersetted: false,
+                parent: routineId,
+                routineOrder: index,
+              ),
+            );
+            index++;
           }
         }
       },
