@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercise_recording/setrecord.dart';
 import 'package:gymmanager/widgets/routines/stats/widgets/exercise_set/exerciseset.dart';
+import 'package:gymmanager/widgets/routines/stats/widgets/exercise_set/statistics/statsview.dart';
 import 'package:gymmanager/widgets/routines/stats/widgets/superset_set.dart';
 
 //This object will generate each "set" for the user to record their data
@@ -41,6 +42,9 @@ class _RecorderState extends State<Recorder> {
                 : "Superset",
             style: const TextStyle(fontSize: 30),
           ),
+          ...(widget.object.runtimeType == Exercise
+              ? [StatsView(exercise: widget.object as Exercise)]
+              : []),
           ...widget.setRecorders,
         ],
       ),

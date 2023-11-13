@@ -5,7 +5,7 @@ class SetRecord {
   final int? id;
   final ExerciseType exerciseType;
   int amount;
-  int weight;
+  double weight;
   SetRecord({
     this.id,
     required this.exerciseType,

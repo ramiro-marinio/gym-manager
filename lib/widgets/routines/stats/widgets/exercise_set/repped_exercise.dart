@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercise_recording/setrecord.dart';
 import 'package:gymmanager/widgets/infobutton.dart';
+import 'package:gymmanager/widgets/routines/stats/widgets/exercise_set/statistics/statsview.dart';
 
 class RepsExercise extends StatefulWidget {
   final String label;
@@ -31,12 +32,32 @@ class _RepsExerciseState extends State<RepsExercise> {
         child: Card(
           child: Column(
             children: [
-              Text(
-                widget.label,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    widget.label,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            StatsView(exercise: widget.exercise),
+                          ],
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.query_stats),
+                    splashRadius: 15,
+                  )
+                ],
               ),
               Text(
                 !widget.exercise.dropset
@@ -124,11 +145,14 @@ class _RepsExerciseState extends State<RepsExercise> {
                       contentPadding: EdgeInsets.symmetric(vertical: 0),
                     ),
                     inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r'^\d*\.?\d{0,1}')),
                       LengthLimitingTextInputFormatter(4),
                     ],
                     onChanged: (value) {
-                      widget.record.weight = int.tryParse(value) ?? 0;
+                      widget.record.weight = int.tryParse(value) != null
+                          ? int.parse(value).toDouble()
+                          : 0;
                     },
                   ),
                 ),

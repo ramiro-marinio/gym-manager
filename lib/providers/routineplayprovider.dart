@@ -17,6 +17,7 @@ class RoutinePlayProvider extends ChangeNotifier {
   }
 
   List<Recorder> recorderPages = [];
+
   void toggleTimer() {
     if (timerActive) {
       _subscription?.pause();
@@ -49,9 +50,11 @@ class RoutinePlayProvider extends ChangeNotifier {
     timerActive = false;
     currentExercise = 0;
     currentRoutine = null;
+    recorderPages.clear();
   }
 
   void start(ExerciseContainer? routine) {
+    stop();
     currentRoutine = routine;
     currentExercise = 0;
     time = 0;

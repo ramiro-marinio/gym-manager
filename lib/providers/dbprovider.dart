@@ -6,6 +6,7 @@ import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercise_recording/setrecord.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/db/resources/exercisetype.dart';
+import 'package:gymmanager/settings/settings.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -108,6 +109,7 @@ class DbProvider extends ChangeNotifier {
   Future<void> deleteExerciseContainer(int id) async {
     Database db = await database;
     db.delete("ExerciseContainers", where: "Id=$id OR Parent=$id");
+    db.delete("RoutineRecords");
     db.delete("Exercises", where: "Parent=$id");
     notifyListeners();
   }
@@ -163,6 +165,52 @@ class DbProvider extends ChangeNotifier {
   void createRoutineRecord(Map<String, dynamic> map) async {
     Database db = await database;
     db.insert('RoutineRecords', map);
+  }
+
+  Future<SetRecord> getRecordByWeight(
+      ExerciseType exerciseType, bool highestWeight) async {
+    Database db = await database;
+    Map<String, Object?> map = (await db.query('SetRecords',
+        where: "ExerciseType=${exerciseType.id}",
+        orderBy: 'Weight ${'ASC'}',
+        limit: 1))[0];
+    return SetRecord(
+      id: map['Id'] as int,
+      exerciseType: exerciseType,
+      amount: map['Amount'] as int,
+      weight: map['Weight'] as double,
+    );
+  }
+
+  Future<List<SetRecord>> getLastRecords(
+      ExerciseType exerciseType, int limit) async {
+    Database db = await database;
+    List<Map<String, Object?>> maps = (await db.query('SetRecords',
+        where: "ExerciseType=${exerciseType.id}",
+        orderBy: 'CreationDate DESC',
+        limit: limit));
+    return List.generate(maps.length, (index) {
+      Map<String, Object?> map = maps[index];
+      return SetRecord(
+        id: map['Id'] as int,
+        exerciseType: exerciseType,
+        amount: map['Amount'] as int,
+        weight: map['Weight'] as double,
+      );
+    });
+  }
+
+  Future<Map<String, dynamic>> getStatisticsOf(
+      ExerciseType exerciseType) async {
+    List<SetRecord> lastWeights = (await getLastRecords(exerciseType, 12));
+    return {
+      'highestWeight':
+          (await getRecordByWeight(exerciseType, true)).amount.toDouble(),
+      'lowestWeight':
+          (await getRecordByWeight(exerciseType, false)).amount.toDouble(),
+      'lastWeights': lastWeights,
+      'kgUnit': await Settings().getUnit(),
+    };
   }
   //END OF STATISTICS SECTION
 }

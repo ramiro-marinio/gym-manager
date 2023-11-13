@@ -32,12 +32,13 @@ CREATE TABLE SetRecords(
     ExerciseType INTEGER NOT NULL,
     CreationDate DATETIME NOT NULL,
     Amount INTEGER NOT NULL,
-    Weight INTEGER,
+    Weight FLOAT(3),
     FOREIGN KEY (ExerciseType) REFERENCES ExerciseTypes(Id) ON DELETE CASCADE
 );
 CREATE TABLE RoutineRecords(
     Id INTEGER PRIMARY KEY,
     RoutineId INTEGER NOT NULL,
     RoutineTime INTEGER NOT NULL,
-    Moment DATE NOT NULL
+    Moment DATE NOT NULL,
+    FOREIGN KEY(RoutineId) REFERENCES ExerciseContainers(Id) ON DELETE CASCADE
 );
