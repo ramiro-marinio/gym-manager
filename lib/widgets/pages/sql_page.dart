@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:gymmanager/providers/dbprovider.dart';
 import 'package:gymmanager/widgets/infobutton.dart';
 import 'package:gymmanager/widgets/pages/navdrawer.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -20,10 +19,7 @@ class _SqlPageState extends State<SqlPage> {
   Widget build(BuildContext context) {
     DbProvider provider = context.read<DbProvider>();
     TextEditingController cmdController = TextEditingController();
-    final scarySound = AudioPlayer();
-    scarySound.setAsset("assets/scary.mp3");
-    scarySound.setVolume(100);
-    scarySound.load();
+
     return Scaffold(
       drawer: const NavDrawer(),
       appBar: AppBar(
@@ -112,15 +108,6 @@ class _SqlPageState extends State<SqlPage> {
             onPressed: () async {
               deleteDatabase("${await provider.dbdir}gymmanager.db");
               if (context.mounted) {
-                scarySound.play();
-                showDialog(
-                  context: context,
-                  builder: (context) => const AlertDialog(
-                    title: Text("Done"),
-                    content:
-                        Text("Database was wiped out. The app will now close."),
-                  ),
-                );
                 Future.delayed(
                   const Duration(seconds: 8),
                   () => exit(0),
