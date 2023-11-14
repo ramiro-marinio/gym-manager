@@ -46,15 +46,15 @@ class _RoutineWidgetState extends State<RoutineWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Tooltip(
-                  message: "Edit Routine",
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.edit),
-                    splashRadius: 25,
-                    splashColor: const Color.fromARGB(150, 33, 149, 243),
-                  ),
-                ),
+                // Tooltip(
+                //   message: "Edit Routine",
+                //   child: IconButton(
+                //     onPressed: () {},
+                //     icon: const Icon(Icons.edit),
+                //     splashRadius: 25,
+                //     splashColor: const Color.fromARGB(150, 33, 149, 243),
+                //   ),
+                // ),
                 Tooltip(
                   message: "Start Routine",
                   //THIS BUTTON IS THE ROUTINE PLAYER

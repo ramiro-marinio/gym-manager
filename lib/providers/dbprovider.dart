@@ -28,47 +28,52 @@ class DbProvider extends ChangeNotifier {
           if (statement.trim().isNotEmpty) {
             await db.execute(statement);
           }
-          List<ExerciseType> defaultExercises = [
-            ExerciseType(name: "Bicep Curls", description: "", repunit: true),
-            ExerciseType(
-                name: "Tricep Extension", description: "", repunit: true),
-            ExerciseType(name: "Squats", description: "", repunit: true),
-            ExerciseType(name: "Deadlift", description: "", repunit: true),
-            ExerciseType(name: "Bench Press", description: "", repunit: true),
-            ExerciseType(name: "Bicycle", description: "", repunit: false),
-            ExerciseType(name: "Treadmill", description: "", repunit: true),
-          ];
-          for (ExerciseType exerciseType in defaultExercises) {
-            createExercise(exerciseType);
-          }
-          int routineId = await createRoutine(ExerciseContainer(
-            isRoutine: true,
-            name: "Demo Routine",
-            creationDate: DateFormat("yyyy-MM-dd").format(DateTime.now()),
-            description: "Demonstration Routine",
-          ));
-          int index = 0;
-          for (ExerciseType exerciseType in defaultExercises) {
-            createRoutineExercise(
-              Exercise(
-                exerciseType: exerciseType,
-                amount: exerciseType.repunit ? 12 : 300,
-                sets: exerciseType.repunit ? 4 : 1,
-                dropset: false,
-                supersetted: false,
-                parent: routineId,
-                routineOrder: index,
-              ),
-            );
-            index++;
-          }
         }
+        createDefaultData(db);
+        notifyListeners();
       },
       onOpen: (db) async {
-        //This is necessary for foreign keys to work
-        await db.execute("PRAGMA foreign_keys = ON;");
+        // deleteDatabase(dbpath);
       },
     );
+  }
+
+  void createDefaultData(Database db) async {
+    List<ExerciseType> defaultExercises = [
+      ExerciseType(name: "Bicep Curls", description: "", repunit: true),
+      ExerciseType(name: "Tricep Extension", description: "", repunit: true),
+      ExerciseType(name: "Squats", description: "", repunit: true),
+      ExerciseType(name: "Deadlift", description: "", repunit: true),
+      ExerciseType(name: "Bench Press", description: "", repunit: true),
+      ExerciseType(name: "Bicycle", description: "", repunit: false),
+      ExerciseType(name: "Treadmill", description: "", repunit: false),
+    ];
+    int routineId = await db.insert(
+      'ExerciseContainers',
+      ExerciseContainer(
+        isRoutine: true,
+        name: "Demo Routine",
+        creationDate: DateFormat("yyyy-MM-dd").format(DateTime.now()),
+        description: "Demonstration Routine",
+      ).toJson(),
+    );
+    for (var i = 0; i < defaultExercises.length; i++) {
+      ExerciseType exerciseType = defaultExercises[i];
+      int id = await db.insert("ExerciseTypes", exerciseType.toJson());
+      exerciseType.id = id;
+      db.insert(
+        'Exercises',
+        Exercise(
+          exerciseType: exerciseType,
+          amount: exerciseType.repunit ? 12 : 300,
+          sets: exerciseType.repunit ? 4 : 1,
+          dropset: false,
+          supersetted: false,
+          parent: routineId,
+          routineOrder: i,
+        ).toJson(),
+      );
+    }
   }
 
   //EXERCISES SECTION
@@ -99,7 +104,8 @@ class DbProvider extends ChangeNotifier {
     return _exerciseTypes!;
   }
 
-  Future<void> createExercise(ExerciseType exercise) async {
+  Future<void> createExercise(
+      {required ExerciseType exercise, bool notify = true}) async {
     Database db = await database;
     db.insert(
       'ExerciseTypes',
@@ -134,10 +140,13 @@ class DbProvider extends ChangeNotifier {
 
   //END OF EXERCISES SECTION
   //ROUTINE SECTION
-  Future<int> createRoutine(ExerciseContainer routine) async {
+  Future<int> createRoutine(
+      {required ExerciseContainer routine, bool notify = true}) async {
     Database db = await database;
     int id = await db.insert('ExerciseContainers', routine.toJson());
-    notifyListeners();
+    if (notify) {
+      notifyListeners();
+    }
     return id;
   }
 

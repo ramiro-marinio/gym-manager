@@ -4,7 +4,7 @@ import 'package:gymmanager/providers/dbprovider.dart';
 import 'package:gymmanager/providers/routinecreationprovider.dart';
 import 'package:gymmanager/providers/routineplayprovider.dart';
 import 'package:gymmanager/widgets/pages/exercisemanager.dart';
-import 'package:gymmanager/widgets/pages/homescreen.dart';
+import 'package:gymmanager/widgets/pages/home/homescreen.dart';
 import 'package:gymmanager/widgets/pages/routines.dart';
 import 'package:gymmanager/widgets/pages/settings.dart';
 import 'package:gymmanager/widgets/pages/sql_page.dart';

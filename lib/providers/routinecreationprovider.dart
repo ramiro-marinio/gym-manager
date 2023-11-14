@@ -60,7 +60,7 @@ class CreationProvider extends ChangeNotifier {
     final DbProvider dbprovider = context.read<DbProvider>();
     String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
     int routineId = await dbprovider.createRoutine(
-      ExerciseContainer(
+      routine: ExerciseContainer(
         isRoutine: true,
         creationDate: date,
         name: name,

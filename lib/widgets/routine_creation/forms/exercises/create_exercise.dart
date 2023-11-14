@@ -47,6 +47,7 @@ class _CreateExerciseState extends State<CreateExercise> {
                   Card(
                     color: Colors.transparent,
                     child: TextFormField(
+                      maxLength: 200,
                       controller: namecontroller,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -113,7 +114,7 @@ class _CreateExerciseState extends State<CreateExercise> {
                       if (_formKey.currentState!.validate()) {
                         if (!widget.modifyMode) {
                           context.read<DbProvider>().createExercise(
-                                ExerciseType(
+                                exercise: ExerciseType(
                                   name: namecontroller!.text,
                                   description: descriptioncontroller!.text,
                                   repunit: repunit!,
