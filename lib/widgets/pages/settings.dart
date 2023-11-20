@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:gymmanager/providers/routineplayprovider.dart';
 import 'package:gymmanager/settings/settings.dart';
 import 'package:gymmanager/widgets/pages/navdrawer.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -22,6 +24,9 @@ class _SettingsPageState extends State<SettingsPage> {
       () => widget.kgUnit.then(
         (value) {
           setState(() {
+            if (settingsValue == null) {
+              switchValue = value;
+            }
             settingsValue ??= value;
           });
         },
@@ -68,23 +73,14 @@ class _SettingsPageState extends State<SettingsPage> {
               onPressed: switchValue != settingsValue
                   ? () {
                       Settings().setUnit(switchValue);
-                      setState(
+                      setState(() {
+                        settingsValue = switchValue;
+                        context.read<RoutinePlayProvider>().stop();
+                      });
+                      Future.delayed(
+                        const Duration(seconds: 1),
                         () {
-                          settingsValue = switchValue;
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                                  content: Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.all(4.0),
-                                child: Icon(
-                                  Icons.check,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Text("Updated Successfully!"),
-                            ],
-                          )));
+                          exit(0);
                         },
                       );
                     }
@@ -129,7 +125,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                       deleteDatabase(
                                         "${await getDatabasesPath()}gymmanager.db",
                                       );
-                                      exit(0);
                                     },
                                     child: const Text("OK"),
                                   ),

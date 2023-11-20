@@ -239,9 +239,14 @@ class DbProvider extends ChangeNotifier {
   Future<SetRecord> getRecordByWeight(
       ExerciseType exerciseType, bool highestWeight) async {
     Database db = await database;
+    print("Weight ${highestWeight ? 'DESC' : 'ASC'}");
+    print((await db.query('SetRecords',
+        where: "ExerciseType=${exerciseType.id} AND Amount > 0",
+        orderBy: 'Weight ${highestWeight ? 'DESC' : 'ASC'}',
+        limit: 1))[0]);
     Map<String, Object?> map = (await db.query('SetRecords',
         where: "ExerciseType=${exerciseType.id} AND Amount > 0",
-        orderBy: 'Weight ${'ASC'}',
+        orderBy: 'Weight ${highestWeight ? 'DESC' : 'ASC'}',
         limit: 1))[0];
     return SetRecord(
       id: map['Id'] as int,
@@ -275,9 +280,9 @@ class DbProvider extends ChangeNotifier {
     try {
       return {
         'highestWeight':
-            (await getRecordByWeight(exerciseType, true)).amount.toDouble(),
+            (await getRecordByWeight(exerciseType, true)).weight.toDouble(),
         'lowestWeight':
-            (await getRecordByWeight(exerciseType, false)).amount.toDouble(),
+            (await getRecordByWeight(exerciseType, false)).weight.toDouble(),
         'lastWeights': lastWeights,
         'kgUnit': await Settings().getUnit(),
       };

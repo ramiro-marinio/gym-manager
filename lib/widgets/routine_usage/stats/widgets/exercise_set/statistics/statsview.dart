@@ -43,30 +43,33 @@ class _StatsViewState extends State<StatsView> {
                       height: 125,
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: AutoSizeText(
-                                  "Statistics: Not enough statistics!",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.w900),
-                                ),
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Expanded(
+                              child: AutoSizeText(
+                                "Statistics: Not enough statistics!",
+                                maxLines: 1,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.w900),
                               ),
-                            ],
+                            ),
                           ),
-                          Text(
-                            "They will show up after this exercise is done at least once.",
-                            style: TextStyle(color: Colors.white),
+                          SizedBox(
+                            width: double.infinity,
+                            child: Text(
+                              "They will show up after this exercise is done at least once.",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ],
                       ),
                     ),
                   );
                 }
+                print(snapshot.data!['lowestWeight']);
                 bool kgUnit = snapshot.data!['kgUnit'];
                 List<SetRecord> lastWeights = snapshot.data!['lastWeights'];
 
