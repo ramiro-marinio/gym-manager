@@ -12,15 +12,18 @@ class NavPushButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => address,
+    return SizedBox(
+      width: 300,
+      child: ElevatedButton.icon(
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => address,
+          ),
         ),
+        icon: icon,
+        label: Text(text),
       ),
-      icon: icon,
-      label: Text(text),
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercise_recording/setrecord.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
-import 'package:gymmanager/widgets/routines/stats/widgets/exercise_set/exerciseset.dart';
+import 'package:gymmanager/widgets/routine_usage/stats/widgets/exercise_set/exerciseset.dart';
 
 class SupersetSet extends StatefulWidget {
   final ExerciseContainer superset;
@@ -28,6 +28,11 @@ class SupersetSet extends StatefulWidget {
 class _SupersetSetState extends State<SupersetSet> {
   @override
   Widget build(BuildContext context) {
+    widget.supersetRecorderWdidgets.sort(
+      (a, b) {
+        return a.exercise.routineOrder!.compareTo(b.exercise.routineOrder!);
+      },
+    );
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(

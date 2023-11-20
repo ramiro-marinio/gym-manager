@@ -1,27 +1,31 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:gymmanager/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/functions/displaytime.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercisetype.dart';
+import 'package:gymmanager/providers/routinecreationprovider.dart';
 import 'package:gymmanager/widgets/routine_creation/widgets/minitextfield.dart';
-import 'package:gymmanager/widgets/routines/time_setter.dart';
+import 'package:gymmanager/widgets/routine_usage/time_setter.dart';
+import 'package:provider/provider.dart';
 
-class MiniExerciseWidget extends StatefulWidget {
+class SupersetExerciseWidget extends StatefulWidget {
   final Exercise exercise;
-  final VoidCallback onDelete;
+  final ExerciseContainer superset;
   final VoidCallback dropsetSwitch;
-  const MiniExerciseWidget({
-    super.key,
-    required this.exercise,
-    required this.onDelete,
-    required this.dropsetSwitch,
-  });
+  final TextEditingController? controller;
+  const SupersetExerciseWidget(
+      {super.key,
+      required this.exercise,
+      required this.superset,
+      required this.dropsetSwitch,
+      this.controller});
 
   @override
-  State<MiniExerciseWidget> createState() => _MiniExerciseWidgetState();
+  State<SupersetExerciseWidget> createState() => _SupersetExerciseWidgetState();
 }
 
-class _MiniExerciseWidgetState extends State<MiniExerciseWidget> {
+class _SupersetExerciseWidgetState extends State<SupersetExerciseWidget> {
   @override
   Widget build(BuildContext context) {
     final Exercise exercise = widget.exercise;
@@ -83,6 +87,7 @@ class _MiniExerciseWidgetState extends State<MiniExerciseWidget> {
               height: exerciseType.repunit ? 20 : 25,
               child: exerciseType.repunit
                   ? MiniTextField(
+                      controller: widget.controller,
                       changeHandler: (value) {
                         exercise.amount = int.tryParse(value) ?? 1;
                       },
@@ -111,8 +116,9 @@ class _MiniExerciseWidgetState extends State<MiniExerciseWidget> {
                           child: AutoSizeText(
                             !exercise.dropset
                                 ? displayTime(
-                                    Duration(seconds: exercise.amount),
-                                  )
+                                    duration:
+                                        Duration(seconds: exercise.amount),
+                                    displayHours: false)
                                 : "-",
                           ),
                         ),
@@ -121,7 +127,12 @@ class _MiniExerciseWidgetState extends State<MiniExerciseWidget> {
             ),
             IconButton(
               onPressed: () {
-                widget.onDelete();
+                CreationProvider creationProvider =
+                    context.read<CreationProvider>();
+                creationProvider.deleteByKeySuperset(
+                  widget.superset,
+                  widget.key!,
+                );
               },
               splashColor: Colors.red,
               icon: const Icon(Icons.delete),

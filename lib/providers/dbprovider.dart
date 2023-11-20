@@ -6,6 +6,8 @@ import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercise_recording/setrecord.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/db/resources/exercisetype.dart';
+import 'package:gymmanager/functions/avg.dart';
+import 'package:gymmanager/providers/routinecreationprovider.dart';
 import 'package:gymmanager/settings/settings.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
@@ -78,7 +80,7 @@ class DbProvider extends ChangeNotifier {
 
   //EXERCISES SECTION
   List<ExerciseType>? _exerciseTypes;
-  Future<void> init() async {
+  Future<void> initExerciseTypes() async {
     Database db = await database;
     List<Map<String, dynamic>> data =
         await db.query('ExerciseTypes', orderBy: "Name ASC");
@@ -98,21 +100,21 @@ class DbProvider extends ChangeNotifier {
 
   List<ExerciseType> get exercises {
     if (_exerciseTypes == null) {
-      init();
+      initExerciseTypes();
       return [];
     }
     return _exerciseTypes!;
   }
 
-  Future<void> createExercise(
-      {required ExerciseType exercise, bool notify = true}) async {
+  Future<void> createExercise({
+    required ExerciseType exercise,
+  }) async {
     Database db = await database;
     db.insert(
       'ExerciseTypes',
       exercise.toJson(),
     );
-    init();
-    notifyListeners();
+    initExerciseTypes();
   }
 
   Future<void> modifyExercise(ExerciseType exercise) async {
@@ -122,7 +124,7 @@ class DbProvider extends ChangeNotifier {
       exercise.toJson(),
       where: 'Id=${exercise.id}',
     );
-    init();
+    initExerciseTypes();
   }
 
   Future<void> deleteExercise(int id) async {
@@ -140,13 +142,16 @@ class DbProvider extends ChangeNotifier {
 
   //END OF EXERCISES SECTION
   //ROUTINE SECTION
-  Future<int> createRoutine(
-      {required ExerciseContainer routine, bool notify = true}) async {
+  Future<int> createRoutine({required ExerciseContainer routine}) async {
     Database db = await database;
-    int id = await db.insert('ExerciseContainers', routine.toJson());
-    if (notify) {
-      notifyListeners();
+    if (routine.id != null) {
+      await db.update('ExerciseContainers', routine.toJson(),
+          where: 'Id=${routine.id}');
     }
+    int id = routine.id == null
+        ? await db.insert('ExerciseContainers', routine.toJson())
+        : routine.id!;
+    notifyListeners();
     return id;
   }
 
@@ -160,14 +165,26 @@ class DbProvider extends ChangeNotifier {
 
   Future<int> createSuperset(ExerciseContainer superset) async {
     Database db = await database;
-    int id = await db.insert('ExerciseContainers', superset.toJson());
-    return id;
+    if (superset.id == null) {
+      int id = await db.insert('ExerciseContainers', superset.toJson());
+      return id;
+    } else {
+      await db.update('ExerciseContainers', superset.toJson(),
+          where: 'Id=${superset.id}');
+      return superset.id!;
+    }
   }
 
   Future<int> createRoutineExercise(Exercise exercise) async {
     Database db = await database;
-    int id = await db.insert('Exercises', exercise.toJson());
-    return id;
+    if (exercise.id == null) {
+      int id = await db.insert('Exercises', exercise.toJson());
+      return id;
+    } else {
+      await db.update('Exercises', exercise.toJson(),
+          where: 'Id=${exercise.id}');
+      return exercise.id!;
+    }
   }
 
   Future<void> deleteRoutineExercise(int id) async {
@@ -176,7 +193,8 @@ class DbProvider extends ChangeNotifier {
     db.delete("SetRecords", where: "ExerciseId=$id");
   }
 
-  Future<List<Map<String, Object>>> getRoutines() async {
+  Future<List<Map<String, Object>>> getRoutines(
+      CreationProvider creationProvider) async {
     Database db = await database;
     List<Map<String, Object>> result = [];
     List<Map<String, Object?>> routineMaps =
@@ -184,11 +202,15 @@ class DbProvider extends ChangeNotifier {
     for (var i = 0; i < routineMaps.length; i++) {
       Map<String, Object?> map = routineMaps[i];
       List<Exercise> exercises = await generateExercises(
-          db, await db.query("Exercises", where: "Parent=${map["Id"]}"));
+          db,
+          await db.query("Exercises",
+              where: "Parent=${map["Id"]}", orderBy: "RoutineOrder ASC"));
       List<ExerciseContainer> exerciseContainerMaps = await generateSupersets(
           await db.query("ExerciseContainers",
-              where: "IsRoutine=0 AND Parent=${map["Id"]}"),
-          db);
+              where: "IsRoutine=0 AND Parent=${map["Id"]}",
+              orderBy: "RoutineOrder ASC"),
+          db,
+          creationProvider);
       result.add({
         'routineData': generateRoutine(map),
         'exercises': [...exercises, ...exerciseContainerMaps]
@@ -199,9 +221,12 @@ class DbProvider extends ChangeNotifier {
 
   //END OF ROUTINE SECTION
   //START OF STATISTICS SECTION
-  void createSetRecords(List<SetRecord> setRecords) async {
+  void createSetRecords(List<SetRecord> setRecords, bool kgUnit) async {
     Database db = await database;
     for (SetRecord record in setRecords) {
+      if (!kgUnit) {
+        record.weight = record.weight / 2.2;
+      }
       db.insert('SetRecords', record.toJson());
     }
   }
@@ -259,6 +284,17 @@ class DbProvider extends ChangeNotifier {
     } on Exception catch (_) {
       return null;
     }
+  }
+
+  Future<int?> getRoutineTime(int id) async {
+    Database db = await database;
+    List<Map<String, Object?>> stats = await db.query("RoutineRecords",
+        limit: 4, where: "Id=$id", columns: ["RoutineTime"]);
+    if (stats.isEmpty) {
+      return null;
+    }
+    return average(List.generate(
+        stats.length, (index) => stats[index]['RoutineTime'] as num)).round();
   }
   //END OF STATISTICS SECTION
 }

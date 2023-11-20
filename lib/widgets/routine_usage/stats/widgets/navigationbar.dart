@@ -32,7 +32,9 @@ class _NavBarState extends State<NavBar> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                displayTime(Duration(seconds: routinePlayProvider.time)),
+                displayTime(
+                    duration: Duration(seconds: routinePlayProvider.time),
+                    displayHours: true),
                 style: const TextStyle(
                   fontSize: 20,
                   color: Colors.white,

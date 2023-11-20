@@ -76,11 +76,14 @@ class _CreateExerciseState extends State<CreateExercise> {
                     color: Colors.transparent,
                     child: Row(
                       children: [
-                        const InfoButton(
-                            title: 'Warning',
-                            text:
-                                'This field cannot be changed after creating the exercise. Choose it carefully.',
-                            icon: Icon(Icons.warning)),
+                        Visibility(
+                          visible: !widget.modifyMode,
+                          child: const InfoButton(
+                              title: 'Warning',
+                              text:
+                                  'This field cannot be changed after creating the exercise. Choose it carefully.',
+                              icon: Icon(Icons.warning)),
+                        ),
                         const Icon(Icons.timer),
                         Padding(
                           padding: const EdgeInsets.only(top: 8),

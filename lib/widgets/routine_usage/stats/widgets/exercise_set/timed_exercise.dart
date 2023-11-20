@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercise_recording/setrecord.dart';
 import 'package:gymmanager/functions/displaytime.dart';
-import 'package:gymmanager/widgets/routines/time_setter.dart';
+import 'package:gymmanager/widgets/routine_usage/time_setter.dart';
 
 class TimeExercise extends StatefulWidget {
   final String label;
@@ -37,7 +37,7 @@ class _TimeExerciseState extends State<TimeExercise> {
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
               ),
               Text(
-                "Expected time:${displayTime(Duration(seconds: widget.exercise.amount))}",
+                "Expected time:${displayTime(duration: Duration(seconds: widget.exercise.amount), displayHours: false)}",
                 style:
                     const TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
               ),
@@ -57,7 +57,9 @@ class _TimeExerciseState extends State<TimeExercise> {
                 child: Card(
                   color: Colors.transparent,
                   child: Text(
-                    displayTime(Duration(seconds: widget.record.amount)),
+                    displayTime(
+                        duration: Duration(seconds: widget.record.amount),
+                        displayHours: false),
                     style: const TextStyle(fontSize: 20, letterSpacing: 1.5),
                   ),
                 ),

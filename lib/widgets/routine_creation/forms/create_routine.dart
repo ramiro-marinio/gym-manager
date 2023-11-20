@@ -1,29 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:gymmanager/providers/dbprovider.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
-import 'package:gymmanager/db/resources/exercisetype.dart';
 import 'package:gymmanager/providers/routinecreationprovider.dart';
 import 'package:gymmanager/widgets/routine_creation/widgets/add_menu.dart';
 import 'package:gymmanager/widgets/routine_creation/forms/exercises/add_exercise.dart';
 import 'package:gymmanager/widgets/routine_creation/widgets/no_exercises.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class CreateRoutine extends StatefulWidget {
-  const CreateRoutine({super.key});
+  final Map<String, Object>? editRoutine;
+  const CreateRoutine({super.key, this.editRoutine});
 
   @override
   State<CreateRoutine> createState() => _CreateRoutineState();
 }
 
 class _CreateRoutineState extends State<CreateRoutine> {
-  TextEditingController name = TextEditingController();
-  TextEditingController description = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  bool initialized = false;
   @override
   Widget build(BuildContext context) {
+    context.read<CreationProvider>().editMode = widget.editRoutine != null;
+    if ((widget.editRoutine?['routine'] as ExerciseContainer?) != null) {
+      nameController.text =
+          (widget.editRoutine?['routine'] as ExerciseContainer).name!;
+      descriptionController.text =
+          (widget.editRoutine?['routine'] as ExerciseContainer).description!;
+    }
     List<Widget> routine = context.watch<CreationProvider>().routine;
-    List<ExerciseType> exs = context.watch<DbProvider>().exercises;
+    if (widget.editRoutine != null && routine.isEmpty && !initialized) {
+      for (Object o in widget.editRoutine!['children']! as List<Object>) {
+        if (o.runtimeType == Exercise) {
+          o = o as Exercise;
+          context
+              .read<CreationProvider>()
+              .add(o, UniqueKey(), o.amount, o.sets, false);
+        } else {
+          o = o as ExerciseContainer;
+          context
+              .read<CreationProvider>()
+              .add(o, UniqueKey(), null, o.sets!, false);
+        }
+      }
+      initialized = true;
+    }
     final formKey = GlobalKey<FormState>();
     return WillPopScope(
       onWillPop: () async {
@@ -32,8 +55,8 @@ class _CreateRoutineState extends State<CreateRoutine> {
           builder: (context) {
             return AlertDialog(
               title: const Text("Quit?"),
-              content: const Text(
-                  "If you quit. The routine you are building will not be saved. Proceed anyway?"),
+              content: Text(
+                  "If you quit. The routine you are ${widget.editRoutine == null ? "building" : "editing"} will not be saved. Proceed anyway?"),
               actions: [
                 TextButton(
                     onPressed: () {
@@ -42,7 +65,7 @@ class _CreateRoutineState extends State<CreateRoutine> {
                     child: const Text("NO")),
                 TextButton(
                     onPressed: () {
-                      context.read<CreationProvider>().routine.clear();
+                      context.read<CreationProvider>().exitEditor();
                       Navigator.pop(context);
                       Navigator.pop(context);
                     },
@@ -55,7 +78,9 @@ class _CreateRoutineState extends State<CreateRoutine> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Create a routine"),
+          title: Text(widget.editRoutine == null
+              ? "Create a routine"
+              : "Edit routine \"${(widget.editRoutine!['routine'] as ExerciseContainer).name}\""),
           actions: [
             AddMenu(
               addExercise: () {
@@ -73,9 +98,13 @@ class _CreateRoutineState extends State<CreateRoutine> {
                             dropset: false,
                             supersetted: false,
                           );
-                          context.read<CreationProvider>().add(e, key);
+                          context.read<CreationProvider>().add(
+                              e,
+                              key,
+                              e.exerciseType.repunit ? 12 : 300,
+                              e.exerciseType.repunit ? 4 : 1,
+                              context.mounted);
                         },
-                        exercises: exs,
                       );
                     },
                   ),
@@ -85,7 +114,9 @@ class _CreateRoutineState extends State<CreateRoutine> {
                 Key key = UniqueKey();
                 ExerciseContainer supersetcontainer =
                     ExerciseContainer(isRoutine: false, sets: 1, children: []);
-                context.read<CreationProvider>().add(supersetcontainer, key);
+                context
+                    .read<CreationProvider>()
+                    .add(supersetcontainer, key, null, 1, context.mounted);
               },
             )
           ],
@@ -117,7 +148,7 @@ class _CreateRoutineState extends State<CreateRoutine> {
                       return null;
                     },
                     maxLength: 50,
-                    controller: name,
+                    controller: nameController,
                     autocorrect: false,
                     decoration: const InputDecoration(
                       hintText: "Routine Name",
@@ -131,7 +162,7 @@ class _CreateRoutineState extends State<CreateRoutine> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
-                    controller: description,
+                    controller: descriptionController,
                     autocorrect: false,
                     decoration: const InputDecoration(
                         hintText: "Description",
@@ -181,12 +212,23 @@ class _CreateRoutineState extends State<CreateRoutine> {
                         );
                         Navigator.pop(context);
                       },
-                      name.text,
-                      description.text,
+                      ExerciseContainer(
+                        id: (widget.editRoutine?['routine']
+                                as ExerciseContainer?)
+                            ?.id,
+                        isRoutine: true,
+                        creationDate: DateFormat("yyyy-MM-dd").format(
+                          DateTime.now(),
+                        ),
+                        name: nameController.text,
+                        description: descriptionController.text,
+                      ),
                     );
                   }
                 },
-                child: const Icon(Icons.check),
+                child: widget.editRoutine == null
+                    ? const Icon(Icons.check)
+                    : const Icon(Icons.save),
               )
             : null,
       ),

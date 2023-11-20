@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.list),
           ),
           LinkButton(
-            address: "/sql_settings",
+            address: "/user_settings",
             text: "SETTINGS",
             icon: Icon(Icons.settings),
           ),

@@ -42,6 +42,13 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         Row(
           children: [
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                "Unit:",
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
             Switch(
               value: switchValue,
               onChanged: (value) {
@@ -49,6 +56,13 @@ class _SettingsPageState extends State<SettingsPage> {
                   switchValue = !switchValue;
                 });
               },
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                switchValue ? "kg" : "lb",
+                style: const TextStyle(fontSize: 20),
+              ),
             ),
             ElevatedButton(
               onPressed: switchValue != settingsValue
@@ -82,7 +96,7 @@ class _SettingsPageState extends State<SettingsPage> {
         Row(
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(top: 20, left: 8),
               child: ElevatedButton(
                 onPressed: () {
                   showDialog(
@@ -99,29 +113,29 @@ class _SettingsPageState extends State<SettingsPage> {
                           child: const Text("NO"),
                         ),
                         TextButton(
-                          onPressed: () async {
-                            deleteDatabase(
-                              "${await getDatabasesPath()}gymmanager.db",
+                          onPressed: () {
+                            Navigator.pop(context);
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              barrierColor: Colors.black,
+                              builder: (context) => AlertDialog(
+                                title: const Text("Done."),
+                                content: const Text(
+                                    "The database will delete after pressing the OK button. However, if you regret your decision, you can close the app and the database will not delete."),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () async {
+                                      deleteDatabase(
+                                        "${await getDatabasesPath()}gymmanager.db",
+                                      );
+                                      exit(0);
+                                    },
+                                    child: const Text("OK"),
+                                  ),
+                                ],
+                              ),
                             );
-                            if (context.mounted) {
-                              Navigator.pop(context);
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                barrierColor: Colors.black,
-                                builder: (context) => AlertDialog(
-                                  title: const Text("Done"),
-                                  content:
-                                      const Text("The app will now close."),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => exit(0),
-                                      child: const Text("OK"),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }
                           },
                           child: const Text("YES"),
                         ),

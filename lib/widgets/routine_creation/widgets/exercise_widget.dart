@@ -1,23 +1,25 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:gymmanager/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/functions/displaytime.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/widgets/routine_creation/widgets/minitextfield.dart';
 import 'package:gymmanager/widgets/routine_creation/widgets/superset/miniexercisewidget.dart';
-import 'package:gymmanager/widgets/routines/time_setter.dart';
+import 'package:gymmanager/widgets/routine_usage/time_setter.dart';
 
 class ExerciseWidget extends StatefulWidget {
+  final ExerciseContainer? superset;
   final Exercise exercise;
   final VoidCallback dropsetSwitch;
-  final VoidCallback? onDelete;
-  final bool mini;
-  const ExerciseWidget({
-    super.key,
-    required this.exercise,
-    required this.dropsetSwitch,
-    this.mini = false,
-    this.onDelete,
-  });
+  final bool supersetMode;
+  final Function(Function())? setState;
+  const ExerciseWidget(
+      {super.key,
+      required this.exercise,
+      required this.dropsetSwitch,
+      this.supersetMode = false,
+      this.superset,
+      this.setState});
   @override
   State<ExerciseWidget> createState() => _ExerciseWidgetState();
 
@@ -34,7 +36,7 @@ class _ExerciseWidgetState extends State<ExerciseWidget> {
     final double scrwidth = MediaQuery.of(context).size.width;
     Exercise exercise = widget.exercise;
     bool unit = exercise.exerciseType.repunit;
-    bool mini = widget.mini;
+    bool mini = widget.supersetMode;
     return mini == false
         ? SizedBox(
             width: scrwidth,
@@ -74,6 +76,9 @@ class _ExerciseWidgetState extends State<ExerciseWidget> {
                             height: unit ? 20 : 25,
                             child: unit
                                 ? MiniTextField(
+                                    controller: TextEditingController(
+                                        text:
+                                            widget.exercise.amount.toString()),
                                     changeHandler: (String value) {
                                       exercise.amount =
                                           int.tryParse(value) ?? 1;
@@ -103,9 +108,11 @@ class _ExerciseWidgetState extends State<ExerciseWidget> {
                                       child: Center(
                                         child: AutoSizeText(
                                           !exercise.dropset
-                                              ? displayTime(Duration(
-                                                  seconds: exercise.amount,
-                                                ))
+                                              ? displayTime(
+                                                  duration: Duration(
+                                                    seconds: exercise.amount,
+                                                  ),
+                                                  displayHours: false)
                                               : "-",
                                         ),
                                       ),
@@ -126,6 +133,8 @@ class _ExerciseWidgetState extends State<ExerciseWidget> {
                             style: TextStyle(fontSize: 18),
                           ),
                           MiniTextField(
+                            controller: TextEditingController(
+                                text: widget.exercise.sets.toString()),
                             changeHandler: (value) {
                               exercise.sets = int.tryParse(value) ?? 1;
                             },
@@ -160,10 +169,13 @@ class _ExerciseWidgetState extends State<ExerciseWidget> {
               ),
             ),
           )
-        : MiniExerciseWidget(
+        : SupersetExerciseWidget(
+            key: widget.key,
+            superset: widget.superset!,
             exercise: exercise,
-            onDelete: widget.onDelete!,
             dropsetSwitch: widget.dropsetSwitch,
+            controller:
+                TextEditingController(text: widget.exercise.amount.toString()),
           );
   }
 }

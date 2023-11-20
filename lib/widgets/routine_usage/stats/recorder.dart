@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercise_recording/setrecord.dart';
-import 'package:gymmanager/widgets/routines/stats/widgets/exercise_set/exerciseset.dart';
-import 'package:gymmanager/widgets/routines/stats/widgets/exercise_set/statistics/statsview.dart';
-import 'package:gymmanager/widgets/routines/stats/widgets/superset_set.dart';
+import 'package:gymmanager/widgets/routine_usage/stats/widgets/exercise_set/exerciseset.dart';
+import 'package:gymmanager/widgets/routine_usage/stats/widgets/exercise_set/statistics/statsview.dart';
+import 'package:gymmanager/widgets/routine_usage/stats/widgets/superset_set.dart';
 
 //This object will generate each "set" for the user to record their data
 class Recorder extends StatefulWidget {

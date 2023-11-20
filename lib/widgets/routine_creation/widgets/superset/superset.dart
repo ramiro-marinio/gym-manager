@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gymmanager/providers/dbprovider.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
-import 'package:gymmanager/db/resources/exercisetype.dart';
+import 'package:gymmanager/providers/routinecreationprovider.dart';
 import 'package:gymmanager/widgets/routine_creation/widgets/exercise_widget.dart';
 import 'package:gymmanager/widgets/routine_creation/forms/exercises/add_exercise.dart';
 import 'package:provider/provider.dart';
@@ -22,15 +21,13 @@ class SuperSet extends StatefulWidget {
 class _SuperSetState extends State<SuperSet> {
   @override
   Widget build(BuildContext context) {
-    List<ExerciseType> exerciseList = context.watch<DbProvider>().exercises;
-    ExerciseContainer superset = widget.superset;
-
-    void delete(int index) {
-      setState(() {
-        superset.children!.removeAt(index);
-      });
+    late ExerciseContainer superset;
+    CreationProvider creationProvider = Provider.of<CreationProvider>(context);
+    for (var i = 0; i < creationProvider.routine.length; i++) {
+      if (creationProvider.routine[i].child.runtimeType == SuperSet) {
+        superset = (creationProvider.routine[i].child as SuperSet).superset;
+      }
     }
-
     return Card(
       color: const Color.fromARGB(255, 150, 150, 255),
       child: SizedBox(
@@ -59,39 +56,31 @@ class _SuperSetState extends State<SuperSet> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => AddExercise(
-                            onChoose: (exerciseType) {
-                              setState(() {
-                                Key key = UniqueKey();
-                                Exercise e = Exercise(
-                                    amount: 1,
-                                    sets: 1,
-                                    dropset: false,
-                                    exerciseType: exerciseType,
-                                    supersetted: true);
-                                superset.children!.add(
-                                  ExerciseWidget(
-                                    key: key,
-                                    exercise: e,
-                                    mini: true,
-                                    dropsetSwitch: () {
-                                      e.dropset = !e.dropset;
-                                    },
-                                    onDelete: () {
-                                      int index = 0;
-                                      for (ExerciseWidget exercise
-                                          in superset.children!) {
-                                        if (exercise.key == key) {
-                                          delete(index);
-                                          break;
-                                        }
-                                        index++;
-                                      }
-                                    },
-                                  ),
-                                );
-                              });
-                            },
-                            exercises: exerciseList),
+                          onChoose: (exerciseType) {
+                            setState(() {
+                              Key key = UniqueKey();
+                              Exercise e = Exercise(
+                                amount: exerciseType.repunit ? 12 : 300,
+                                sets: 1,
+                                dropset: false,
+                                exerciseType: exerciseType,
+                                supersetted: true,
+                              );
+                              superset.children!.add(
+                                ExerciseWidget(
+                                  superset: widget.superset,
+                                  key: key,
+                                  exercise: e,
+                                  supersetMode: true,
+                                  dropsetSwitch: () {
+                                    e.dropset = !e.dropset;
+                                  },
+                                  setState: setState,
+                                ),
+                              );
+                            });
+                          },
+                        ),
                       ),
                     );
                   },

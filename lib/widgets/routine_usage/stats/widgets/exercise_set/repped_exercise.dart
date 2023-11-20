@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymmanager/db/resources/exercise.dart';
 import 'package:gymmanager/db/resources/exercise_recording/setrecord.dart';
+import 'package:gymmanager/settings/settings.dart';
 import 'package:gymmanager/widgets/infobutton.dart';
-import 'package:gymmanager/widgets/routines/stats/widgets/exercise_set/statistics/statsview.dart';
+import 'package:gymmanager/widgets/routine_usage/stats/widgets/exercise_set/statistics/statsview.dart';
 
 class RepsExercise extends StatefulWidget {
   final String label;
@@ -23,8 +24,19 @@ class RepsExercise extends StatefulWidget {
 }
 
 class _RepsExerciseState extends State<RepsExercise> {
+  Future<bool> getunit = Settings().getUnit();
+  bool? kgUnit;
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      getunit.whenComplete(
+        () {
+          getunit.then((value) {
+            kgUnit ??= value;
+          });
+        },
+      );
+    });
     return Padding(
       padding: EdgeInsets.all(widget.mini ? 12.0 : 0.0),
       child: SizedBox(
@@ -142,19 +154,18 @@ class _RepsExerciseState extends State<RepsExercise> {
                           : widget.record.weight.toString(),
                     ),
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      hintText: "Weight (kg)",
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(vertical: 0),
+                    decoration: InputDecoration(
+                      hintText: kgUnit == true ? "Weight (kg)" : "Weight (lb)",
+                      border: const OutlineInputBorder(),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 0),
                     ),
                     inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.allow(
-                          RegExp(r'^\d*\.?\d{0,1}')),
-                      LengthLimitingTextInputFormatter(4),
+                      LengthLimitingTextInputFormatter(6),
+                      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
                     ],
                     onChanged: (value) {
-                      widget.record.weight = int.tryParse(value) != null
-                          ? int.parse(value).toDouble()
+                      widget.record.weight = double.tryParse(value) != null
+                          ? double.parse(value).toDouble()
                           : 0;
                     },
                   ),

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
 import 'package:gymmanager/providers/dbprovider.dart';
-import 'package:gymmanager/widgets/routines/stats/recorder.dart';
+import 'package:gymmanager/widgets/routine_usage/stats/recorder.dart';
 import 'package:intl/intl.dart';
 
 class RoutinePlayProvider extends ChangeNotifier {
@@ -64,14 +64,16 @@ class RoutinePlayProvider extends ChangeNotifier {
   }
 
   void endRoutine(
-      {required DbProvider dbProvider, required BuildContext context}) {
+      {required DbProvider dbProvider,
+      required BuildContext context,
+      required bool kgUnit}) {
     dbProvider.createRoutineRecord({
       'RoutineId': currentRoutine!.id,
       'RoutineTime': time,
       'Moment': DateFormat('yyyy-MM-dd').format(DateTime.now()),
     });
     for (var i = 0; i < recorderPages.length; i++) {
-      dbProvider.createSetRecords(recorderPages[i].getRecords());
+      dbProvider.createSetRecords(recorderPages[i].getRecords(), kgUnit);
     }
     stop();
     ScaffoldMessenger.of(context).showSnackBar(

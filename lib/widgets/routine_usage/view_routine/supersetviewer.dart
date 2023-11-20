@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
-import 'package:gymmanager/widgets/routines/view_routine/widgets/exerciseviewer.dart';
+import 'package:gymmanager/widgets/routine_usage/view_routine/widgets/exerciseviewer.dart';
 
 class SupersetViewer extends StatelessWidget {
   final ExerciseContainer superset;
@@ -8,6 +8,11 @@ class SupersetViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    superset.children!.sort(
+      (a, b) {
+        return a.exercise.routineOrder!.compareTo(b.exercise.routineOrder!);
+      },
+    );
     return Card(
       color: const Color.fromARGB(255, 100, 100, 255),
       child: Column(children: [

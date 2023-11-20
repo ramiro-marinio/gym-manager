@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gymmanager/db/resources/exercisecontainer.dart';
+import 'package:gymmanager/functions/displaytime.dart';
 import 'package:gymmanager/providers/dbprovider.dart';
 import 'package:gymmanager/providers/routineplayprovider.dart';
-import 'package:gymmanager/widgets/routines/stats/playroutine.dart';
-import 'package:gymmanager/widgets/routines/view_routine/widgets/showroutine.dart';
+import 'package:gymmanager/widgets/routine_creation/forms/create_routine.dart';
+import 'package:gymmanager/widgets/routine_usage/stats/playroutine.dart';
+import 'package:gymmanager/widgets/routine_usage/view_routine/widgets/showroutine.dart';
 import 'package:provider/provider.dart';
 
 class RoutineWidget extends StatefulWidget {
@@ -25,6 +27,7 @@ class _RoutineWidgetState extends State<RoutineWidget> {
     RoutinePlayProvider routinePlayProvider =
         context.watch<RoutinePlayProvider>();
     DbProvider dbProvider = context.read<DbProvider>();
+    Future<int?> avgTime = dbProvider.getRoutineTime(widget.routine.id!);
     return Padding(
       padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
       child: Card(
@@ -43,18 +46,54 @@ class _RoutineWidgetState extends State<RoutineWidget> {
                 ),
               ),
             ),
+            FutureBuilder(
+              future: avgTime,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return Visibility(
+                    visible: snapshot.data != null,
+                    maintainAnimation: true,
+                    maintainSize: true,
+                    maintainState: true,
+                    child: Text(
+                      "Expected time: ${displayTime(
+                        duration: Duration(seconds: snapshot.data ?? 0),
+                        displayHours: true,
+                      )}",
+                    ),
+                  );
+                } else {
+                  return const CircularProgressIndicator.adaptive();
+                }
+              },
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                // Tooltip(
-                //   message: "Edit Routine",
-                //   child: IconButton(
-                //     onPressed: () {},
-                //     icon: const Icon(Icons.edit),
-                //     splashRadius: 25,
-                //     splashColor: const Color.fromARGB(150, 33, 149, 243),
-                //   ),
-                // ),
+                Tooltip(
+                  message: "Edit Routine",
+                  child: IconButton(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("EDITING ROUTINE ${widget.routine.id}"),
+                        ),
+                      );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateRoutine(editRoutine: {
+                            'routine': widget.routine,
+                            'children': widget.exercises
+                          }),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.edit),
+                    splashRadius: 25,
+                    splashColor: const Color.fromARGB(150, 33, 149, 243),
+                  ),
+                ),
                 Tooltip(
                   message: "Start Routine",
                   //THIS BUTTON IS THE ROUTINE PLAYER
