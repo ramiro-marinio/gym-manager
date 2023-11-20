@@ -158,7 +158,7 @@ class DbProvider extends ChangeNotifier {
   Future<void> deleteExerciseContainer(int id) async {
     Database db = await database;
     db.delete("ExerciseContainers", where: "Id=$id OR Parent=$id");
-    db.delete("RoutineRecords");
+    db.delete("RoutineRecords", where: "RoutineId=$id");
     db.delete("Exercises", where: "Parent=$id");
     notifyListeners();
   }
@@ -240,7 +240,7 @@ class DbProvider extends ChangeNotifier {
       ExerciseType exerciseType, bool highestWeight) async {
     Database db = await database;
     Map<String, Object?> map = (await db.query('SetRecords',
-        where: "ExerciseType=${exerciseType.id}",
+        where: "ExerciseType=${exerciseType.id} AND Amount > 0",
         orderBy: 'Weight ${'ASC'}',
         limit: 1))[0];
     return SetRecord(
@@ -255,7 +255,7 @@ class DbProvider extends ChangeNotifier {
       ExerciseType exerciseType, int limit) async {
     Database db = await database;
     List<Map<String, Object?>> maps = (await db.query('SetRecords',
-        where: "ExerciseType=${exerciseType.id}",
+        where: "ExerciseType=${exerciseType.id} AND Amount > 0",
         orderBy: 'CreationDate DESC',
         limit: limit));
     return List.generate(maps.length, (index) {
@@ -289,7 +289,7 @@ class DbProvider extends ChangeNotifier {
   Future<int?> getRoutineTime(int id) async {
     Database db = await database;
     List<Map<String, Object?>> stats = await db.query("RoutineRecords",
-        limit: 4, where: "Id=$id", columns: ["RoutineTime"]);
+        limit: 4, where: "RoutineId=$id", columns: ["RoutineTime"]);
     if (stats.isEmpty) {
       return null;
     }

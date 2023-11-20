@@ -43,13 +43,15 @@ class _HomeScreenState extends State<HomeScreen> {
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
           ),
           LinkButton(
+              address: "/help", text: "ABOUT THE APP", icon: Icon(Icons.help)),
+          LinkButton(
             address: "/exercises",
             text: "MANAGE EXERCISES",
             icon: Icon(Icons.fitness_center),
           ),
           LinkButton(
             address: "/routines",
-            text: "MANAGE ROUTINES",
+            text: "VIEW ROUTINES",
             icon: Icon(Icons.list),
           ),
           LinkButton(

@@ -74,11 +74,7 @@ class _RoutineWidgetState extends State<RoutineWidget> {
                   message: "Edit Routine",
                   child: IconButton(
                     onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("EDITING ROUTINE ${widget.routine.id}"),
-                        ),
-                      );
+                      routinePlayProvider.stop();
                       Navigator.push(
                         context,
                         MaterialPageRoute(

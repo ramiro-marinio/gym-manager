@@ -4,6 +4,7 @@ import 'package:gymmanager/providers/dbprovider.dart';
 import 'package:gymmanager/providers/routinecreationprovider.dart';
 import 'package:gymmanager/providers/routineplayprovider.dart';
 import 'package:gymmanager/widgets/pages/exercisemanager.dart';
+import 'package:gymmanager/widgets/pages/help.dart';
 import 'package:gymmanager/widgets/pages/home/homescreen.dart';
 import 'package:gymmanager/widgets/pages/routines.dart';
 import 'package:gymmanager/widgets/pages/settings.dart';
@@ -32,6 +33,10 @@ void main() {
       path: "/user_settings",
       builder: (context, state) => SettingsPage(),
     ),
+    GoRoute(
+      path: '/help',
+      builder: (context, state) => const Help(),
+    )
   ]);
   runApp(MultiProvider(
     providers: [
